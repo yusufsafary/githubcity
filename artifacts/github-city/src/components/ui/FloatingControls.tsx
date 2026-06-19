@@ -1,10 +1,12 @@
-import { GitFork, Building2 } from 'lucide-react';
+import { GitFork, Building2, Users } from 'lucide-react';
 
 interface FloatingControlsProps {
   showForks: boolean;
   onToggleForks: (v: boolean) => void;
   showSkyline: boolean;
   onToggleSkyline: () => void;
+  showNeighbors: boolean;
+  onToggleNeighbors: () => void;
 }
 
 interface IconBtnProps {
@@ -47,6 +49,7 @@ function Divider() {
 export default function FloatingControls({
   showForks, onToggleForks,
   showSkyline, onToggleSkyline,
+  showNeighbors, onToggleNeighbors,
 }: FloatingControlsProps) {
   return (
     <div style={{
@@ -60,6 +63,14 @@ export default function FloatingControls({
       padding: '4px 6px',
       boxShadow: '0 4px 24px rgba(0,0,0,0.35)',
     }}>
+      <IconBtn
+        active={showNeighbors}
+        onClick={onToggleNeighbors}
+        icon={<Users size={15} />}
+        label={showNeighbors ? 'Tutup Kota Tetangga' : 'Kota Tetangga'}
+        activeColor="#4ABFB0"
+      />
+      <Divider />
       <IconBtn
         active={showForks}
         onClick={() => onToggleForks(!showForks)}
