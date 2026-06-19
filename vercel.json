@@ -1,7 +1,7 @@
 {
-  "buildCommand": "pnpm --filter @workspace/github-city run build",
+  "buildCommand": "cd artifacts/github-city && npm install && npm run build",
   "outputDirectory": "artifacts/github-city/dist/public",
-  "installCommand": "pnpm install",
+  "installCommand": "echo 'skip root install'",
   "framework": null,
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
