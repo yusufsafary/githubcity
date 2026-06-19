@@ -270,8 +270,8 @@ function TaperedSpire({ bw, bd, baseY, spireH, color, nightMode }: {
       <mesh castShadow>
         <cylinderGeometry args={[0.01, base, spireH, 4]} />
         <meshStandardMaterial
-          color={nightMode ? new THREE.Color(color).multiplyScalar(0.25).getStyle() : color}
-          emissive={color} emissiveIntensity={nightMode ? 0.6 : 0.15}
+          color={color}
+          emissive={color} emissiveIntensity={nightMode ? 1.8 : 0.15}
           metalness={0.7} roughness={0.08} />
       </mesh>
       <mesh position={[0, spireH * 0.5 + 0.10, 0]}>
@@ -572,7 +572,7 @@ export default function Building({ data, nightMode, onSelect, animProgress }: Bu
     groupRef.current.scale.x += (targetXZ - groupRef.current.scale.x) * (dt * 10);
     groupRef.current.scale.z += (targetXZ - groupRef.current.scale.z) * (dt * 10);
 
-    const targetEmit = hovered ? (nightMode ? 0.7 : 0.25) : (nightMode ? 0.45 : 0);
+    const targetEmit = hovered ? (nightMode ? 0.7 : 0.25) : (nightMode ? 0.35 : 0);
     emitRef.current.forEach(m => {
       if (m) m.emissiveIntensity += (targetEmit - m.emissiveIntensity) * (dt * 8);
     });
@@ -580,9 +580,9 @@ export default function Building({ data, nightMode, onSelect, animProgress }: Bu
 
   const matStyle = {
     map: texture,
-    color: nightMode ? new THREE.Color(data.color).multiplyScalar(0.65).getStyle() : data.color,
+    color: data.color,
     emissive: emissiveColor,
-    emissiveIntensity: nightMode ? 0.45 : 0,
+    emissiveIntensity: nightMode ? 0.35 : 0,
     roughness: nightMode ? Math.max(0.04, mp.rough - 0.06) : mp.rough,
     metalness: nightMode ? mp.metal + 0.14 : mp.metal,
   };
