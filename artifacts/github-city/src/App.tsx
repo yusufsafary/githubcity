@@ -8,6 +8,7 @@ import StatsOverlay from './components/ui/StatsOverlay';
 import FloatingControls from './components/ui/FloatingControls';
 import LoadingOverlay from './components/ui/LoadingOverlay';
 import Leaderboard from './components/ui/Leaderboard';
+import NeighborCities from './components/ui/NeighborCities';
 import { AboutModal, HowToPlayModal } from './components/ui/InfoModals';
 import { MARS_PALETTE } from './utils/colors';
 
@@ -45,6 +46,7 @@ export default function App() {
   } = useGitHubCity();
 
   const [showSkyline, setShowSkyline] = useState(true);
+  const [showNeighbors, setShowNeighbors] = useState(false);
   const [selectedBuilding, setSelectedBuilding] = useState<BuildingData | null>(null);
   const [showLeaderboard, setShowLeaderboard] = useState(
     window.location.pathname === '/top'
@@ -68,6 +70,11 @@ export default function App() {
     }
   }, [lastUsername, hasCity, showLeaderboard]);
 
+  // Close neighbor panel when city changes
+  useEffect(() => {
+    setShowNeighbors(false);
+  }, [lastUsername]);
+
   const handleLeaderboardSelect = (u: string) => {
     setShowLeaderboard(false);
     setUsername(u);
@@ -79,6 +86,13 @@ export default function App() {
     const next = !showLeaderboard;
     setShowLeaderboard(next);
     window.history.pushState({}, '', next ? '/top' : (lastUsername ? `/${lastUsername}` : '/'));
+  };
+
+  const handleVisitNeighbor = (neighborUsername: string) => {
+    setShowNeighbors(false);
+    setUsername(neighborUsername);
+    buildCity(neighborUsername);
+    window.history.pushState({}, '', `/${neighborUsername}`);
   };
 
   if (showLeaderboard) {
@@ -132,6 +146,16 @@ export default function App() {
           onToggleForks={toggleForks}
           showSkyline={showSkyline}
           onToggleSkyline={() => setShowSkyline(v => !v)}
+          showNeighbors={showNeighbors}
+          onToggleNeighbors={() => setShowNeighbors(v => !v)}
+        />
+      )}
+
+      {hasCity && showNeighbors && lastUsername && (
+        <NeighborCities
+          username={lastUsername}
+          onVisit={handleVisitNeighbor}
+          onClose={() => setShowNeighbors(false)}
         />
       )}
 
@@ -152,7 +176,6 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
         <HeroCity3D />
       </Suspense>
 
-      {/* Gradient overlay — stronger on mobile for readability */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -164,12 +187,10 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
       />
 
       {landscape ? (
-        /* ── Landscape phone: two-column compact layout ─────── */
         <div
           className="absolute inset-0 flex items-center justify-center pointer-events-none"
           style={{ paddingTop: 'max(52px, env(safe-area-inset-top))', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
         >
-          {/* Left: logo + title */}
           <div className="flex flex-col items-center gap-1.5 pointer-events-auto mr-6">
             <GitCityLogo size={46} />
             <h1
@@ -185,7 +206,6 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
               Your GitHub activity as a living 3D city
             </p>
           </div>
-          {/* Right: buttons */}
           <div className="flex flex-col items-start gap-2 pointer-events-auto">
             <button
               onClick={onShowLeaderboard}
@@ -213,7 +233,6 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
                 About
               </button>
             </div>
-            {/* Orynth badge */}
             <a
               href="https://orynth.dev/projects/github-city"
               target="_blank"
@@ -230,7 +249,6 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
           </div>
         </div>
       ) : (
-        /* ── Portrait (default): vertical centered layout ───── */
         <div
           className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
           style={{
@@ -293,7 +311,6 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
             </button>
           </div>
 
-          {/* Orynth badge */}
           <a
             href="https://orynth.dev/projects/github-city"
             target="_blank"
