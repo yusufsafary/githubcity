@@ -419,11 +419,11 @@ function Stars() {
    Building system
 ═══════════════════════════════════════════════ */
 const MATS = {
-  glass:    { body: '#9ab8cc', metal: 0.45, rough: 0.06, win: '#78d8f0', winB: '#50c0e0' },
-  classic:  { body: '#ddd6c8', metal: 0.0,  rough: 0.78, win: '#4ABFB0', winB: '#3aa090' },
-  concrete: { body: '#b8b4ae', metal: 0.04, rough: 0.92, win: '#4ABFB0', winB: '#3aa090' },
-  warm:     { body: '#c8b890', metal: 0.0,  rough: 0.84, win: '#e8c060', winB: '#c8a040' },
-  dark:     { body: '#707880', metal: 0.38, rough: 0.18, win: '#60d8f8', winB: '#40b8d8' },
+  glass:    { body: '#C4A87C', metal: 0.28, rough: 0.38, win: '#4ABFB0', winB: '#2CA89A' },
+  classic:  { body: '#B89468', metal: 0.0,  rough: 0.86, win: '#4ABFB0', winB: '#2CA89A' },
+  concrete: { body: '#A08262', metal: 0.02, rough: 0.92, win: '#4ABFB0', winB: '#2CA89A' },
+  warm:     { body: '#C09060', metal: 0.0,  rough: 0.84, win: '#e8c060', winB: '#c8a040' },
+  dark:     { body: '#8A7260', metal: 0.22, rough: 0.48, win: '#4ABFB0', winB: '#2CA89A' },
 } as const;
 type MatKey = keyof typeof MATS;
 
@@ -602,6 +602,123 @@ function Ground({ night }: { night: boolean }) {
   );
 }
 
+/* ═══════════════════════════════════════════════
+   Mini Traffic — scaled for hero city (~0.3× main)
+═══════════════════════════════════════════════ */
+const MINI_CARS = [
+  { radius: 3.2, speed:  0.30, startAngle: 0.0,  color: '#c0392b' },
+  { radius: 3.2, speed:  0.30, startAngle: 3.14, color: '#2471a3' },
+  { radius: 4.5, speed: -0.22, startAngle: 1.05, color: '#d4ac0d' },
+  { radius: 4.5, speed: -0.22, startAngle: 4.20, color: '#1e8449' },
+  { radius: 2.2, speed:  0.38, startAngle: 2.10, color: '#8e44ad' },
+  { radius: 2.2, speed:  0.38, startAngle: 5.00, color: '#17a589' },
+];
+
+const MINI_PED_SHIRTS = ['#e05c2a','#3178c6','#4ABFB0','#e74c3c','#9b59b6','#2ecc71','#f39c12','#1abc9c'];
+const MINI_PED_SKIN   = ['#f4c09a','#d4956a','#8d5524','#e8b89a'];
+
+const MINI_PEDS = [
+  { radius: 1.5, speed:  0.20, startAngle: 0.0 },
+  { radius: 1.5, speed:  0.20, startAngle: 2.1 },
+  { radius: 1.5, speed:  0.20, startAngle: 4.2 },
+  { radius: 2.0, speed: -0.16, startAngle: 1.0 },
+  { radius: 2.0, speed: -0.16, startAngle: 3.5 },
+  { radius: 2.8, speed:  0.12, startAngle: 0.5 },
+  { radius: 2.8, speed:  0.12, startAngle: 3.6 },
+];
+
+function MiniCar({ radius, speed, startAngle, color }: { radius: number; speed: number; startAngle: number; color: string }) {
+  const ref = useRef<THREE.Group>(null);
+  useFrame(() => {
+    if (!ref.current) return;
+    const t = Date.now() / 1000;
+    const angle = startAngle + t * speed;
+    ref.current.position.set(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
+    ref.current.rotation.y = Math.PI / 2 - angle;
+  });
+  const wheels: [number, number, number][] = [
+    [-0.08, 0.022, 0.063], [-0.08, 0.022, -0.063],
+    [ 0.08, 0.022, 0.063], [ 0.08, 0.022, -0.063],
+  ];
+  return (
+    <group ref={ref}>
+      <mesh position={[0, 0.043, 0]}>
+        <boxGeometry args={[0.23, 0.05, 0.126]} />
+        <meshStandardMaterial color={color} metalness={0.5} roughness={0.3} />
+      </mesh>
+      <mesh position={[0.012, 0.083, 0]}>
+        <boxGeometry args={[0.115, 0.043, 0.100]} />
+        <meshStandardMaterial color={color} metalness={0.3} roughness={0.6} />
+      </mesh>
+      {wheels.map(([x, y, z], i) => (
+        <mesh key={i} position={[x, y, z]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.022, 0.022, 0.020, 6]} />
+          <meshStandardMaterial color="#1a1a1a" roughness={0.95} />
+        </mesh>
+      ))}
+      <mesh position={[ 0.12, 0.048,  0.037]}>
+        <boxGeometry args={[0.007, 0.018, 0.024]} />
+        <meshStandardMaterial color="#fffde8" emissive="#ffe099" emissiveIntensity={1.5} />
+      </mesh>
+      <mesh position={[ 0.12, 0.048, -0.037]}>
+        <boxGeometry args={[0.007, 0.018, 0.024]} />
+        <meshStandardMaterial color="#fffde8" emissive="#ffe099" emissiveIntensity={1.5} />
+      </mesh>
+      <mesh position={[-0.12, 0.048,  0.037]}>
+        <boxGeometry args={[0.007, 0.014, 0.020]} />
+        <meshStandardMaterial color="#ff1a1a" emissive="#ff1a1a" emissiveIntensity={1.3} />
+      </mesh>
+      <mesh position={[-0.12, 0.048, -0.037]}>
+        <boxGeometry args={[0.007, 0.014, 0.020]} />
+        <meshStandardMaterial color="#ff1a1a" emissive="#ff1a1a" emissiveIntensity={1.3} />
+      </mesh>
+    </group>
+  );
+}
+
+function MiniPed({ radius, speed, startAngle, idx }: { radius: number; speed: number; startAngle: number; idx: number }) {
+  const ref = useRef<THREE.Group>(null);
+  const shirt = MINI_PED_SHIRTS[idx % MINI_PED_SHIRTS.length];
+  const skin  = MINI_PED_SKIN[idx % MINI_PED_SKIN.length];
+  useFrame(() => {
+    if (!ref.current) return;
+    const t = Date.now() / 1000;
+    const angle = startAngle + t * speed;
+    const bob = Math.abs(Math.sin(t * Math.abs(speed) * 15)) * 0.006;
+    ref.current.position.set(Math.cos(angle) * radius, bob, Math.sin(angle) * radius);
+    ref.current.rotation.y = Math.PI / 2 - angle;
+  });
+  return (
+    <group ref={ref}>
+      <mesh position={[0, 0.072, 0]}>
+        <sphereGeometry args={[0.016, 6, 6]} />
+        <meshStandardMaterial color={skin} roughness={0.9} />
+      </mesh>
+      <mesh position={[0, 0.044, 0]}>
+        <boxGeometry args={[0.022, 0.034, 0.016]} />
+        <meshStandardMaterial color={shirt} roughness={0.85} />
+      </mesh>
+      <mesh position={[0.006, 0.022, 0]}>
+        <boxGeometry args={[0.009, 0.020, 0.013]} />
+        <meshStandardMaterial color="#222" roughness={0.9} />
+      </mesh>
+      <mesh position={[-0.006, 0.022, 0]}>
+        <boxGeometry args={[0.009, 0.020, 0.013]} />
+        <meshStandardMaterial color="#1a1a40" roughness={0.9} />
+      </mesh>
+    </group>
+  );
+}
+
+function HeroTraffic() {
+  return (
+    <>
+      {MINI_CARS.map((c, i) => <MiniCar key={`mc-${i}`} {...c} />)}
+      {MINI_PEDS.map((p, i) => <MiniPed key={`mp-${i}`} {...p} idx={i} />)}
+    </>
+  );
+}
+
 function CityGroup({ night }: { night: boolean }) {
   const ref = useRef<THREE.Group>(null);
   useFrame((_, dt) => { if (ref.current) ref.current.rotation.y += dt * 0.14; });
@@ -609,6 +726,7 @@ function CityGroup({ night }: { night: boolean }) {
     <group ref={ref}>
       <Ground night={night} />
       {BUILDINGS.map((b, i) => <Building key={i} {...b} night={night} />)}
+      <HeroTraffic />
     </group>
   );
 }
