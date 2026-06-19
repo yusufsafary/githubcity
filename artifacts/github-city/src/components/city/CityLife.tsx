@@ -156,6 +156,65 @@ function TrashCan({ x, z }: { x: number; z: number }) {
   );
 }
 
+/* ── Traffic Light ───────────────────────────────────────── */
+function TrafficLight({ x, z, rotY = 0, offset = 0 }: { x: number; z: number; rotY?: number; offset?: number }) {
+  const redRef = useRef<THREE.MeshStandardMaterial>(null);
+  const yelRef = useRef<THREE.MeshStandardMaterial>(null);
+  const grnRef = useRef<THREE.MeshStandardMaterial>(null);
+
+  useFrame(({ clock }) => {
+    const phase = (clock.getElapsedTime() + offset) % 6;
+    const isRed = phase < 2.5;
+    const isYel = phase >= 2.5 && phase < 3.2;
+    const isGrn = phase >= 3.2;
+    if (redRef.current) redRef.current.emissiveIntensity = isRed ? 4.5 : 0.08;
+    if (yelRef.current) yelRef.current.emissiveIntensity = isYel ? 4.5 : 0.08;
+    if (grnRef.current) grnRef.current.emissiveIntensity = isGrn ? 4.5 : 0.08;
+  });
+
+  return (
+    <group position={[x, 0, z]} rotation={[0, rotY, 0]}>
+      {/* Pole */}
+      <mesh position={[0, 1.65, 0]}>
+        <cylinderGeometry args={[0.055, 0.075, 3.30, 6]} />
+        <meshStandardMaterial color="#556655" metalness={0.65} roughness={0.38} />
+      </mesh>
+      {/* Horizontal arm */}
+      <mesh position={[0.45, 3.22, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.040, 0.040, 0.90, 6]} />
+        <meshStandardMaterial color="#556655" metalness={0.65} roughness={0.38} />
+      </mesh>
+      {/* Housing */}
+      <mesh position={[0.90, 3.12, 0]}>
+        <boxGeometry args={[0.22, 0.58, 0.18]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.6} />
+      </mesh>
+      {/* Visor strips */}
+      {([3.32, 3.12, 2.92] as number[]).map((py, vi) => (
+        <mesh key={vi} position={[0.975, py, 0]}>
+          <boxGeometry args={[0.05, 0.04, 0.20]} />
+          <meshStandardMaterial color="#111" roughness={0.8} />
+        </mesh>
+      ))}
+      {/* Red */}
+      <mesh position={[0.90, 3.32, 0.10]}>
+        <sphereGeometry args={[0.068, 8, 8]} />
+        <meshStandardMaterial ref={redRef} color="#ff2222" emissive="#ff2222" emissiveIntensity={4.5} roughness={0.22} />
+      </mesh>
+      {/* Yellow */}
+      <mesh position={[0.90, 3.12, 0.10]}>
+        <sphereGeometry args={[0.068, 8, 8]} />
+        <meshStandardMaterial ref={yelRef} color="#ffcc00" emissive="#ffcc00" emissiveIntensity={0.08} roughness={0.22} />
+      </mesh>
+      {/* Green */}
+      <mesh position={[0.90, 2.92, 0.10]}>
+        <sphereGeometry args={[0.068, 8, 8]} />
+        <meshStandardMaterial ref={grnRef} color="#22dd22" emissive="#22dd22" emissiveIntensity={0.08} roughness={0.22} />
+      </mesh>
+    </group>
+  );
+}
+
 /* ── Placement data ──────────────────────────────────────── */
 const toXZ = (r: number, deg: number): [number, number] => {
   const a = (deg * Math.PI) / 180;
@@ -191,6 +250,17 @@ const TRASH_DEFS: Array<[number, number]> = [
   [8, 2], [-8, 2], [2, 8], [-2, -8],
 ];
 
+const TL_DEFS: Array<{ x: number; z: number; rot: number; offset: number }> = [
+  { x:  11.5, z:   5.0, rot: 0,             offset: 0.0 },
+  { x: -11.5, z:  -5.0, rot: Math.PI,       offset: 2.0 },
+  { x:   5.0, z:  11.5, rot: Math.PI / 2,   offset: 1.0 },
+  { x:  -5.0, z: -11.5, rot: -Math.PI / 2,  offset: 3.0 },
+  { x:  14.0, z:   0.0, rot: Math.PI / 2,   offset: 1.5 },
+  { x: -14.0, z:   0.0, rot: -Math.PI / 2,  offset: 3.5 },
+  { x:   0.0, z:  14.0, rot: 0,             offset: 2.5 },
+  { x:   0.0, z: -14.0, rot: Math.PI,       offset: 4.5 },
+];
+
 /* ── CityLife export ─────────────────────────────────────── */
 export default function CityLife({ nightMode }: { nightMode: boolean }) {
   return (
@@ -217,6 +287,10 @@ export default function CityLife({ nightMode }: { nightMode: boolean }) {
 
       {TRASH_DEFS.map(([x, z], i) => (
         <TrashCan key={`tc-${i}`} x={x} z={z} />
+      ))}
+
+      {TL_DEFS.map((tl, i) => (
+        <TrafficLight key={`tl-${i}`} x={tl.x} z={tl.z} rotY={tl.rot} offset={tl.offset} />
       ))}
     </>
   );
