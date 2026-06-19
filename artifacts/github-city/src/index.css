@@ -27,7 +27,7 @@
   --primary-foreground: 0 0% 5%;
   --muted: 22 20% 90%;
   --muted-foreground: 22 15% 42%;
-  --app-font-sans: 'Inter', system-ui, sans-serif;
+  --app-font-sans: 'Space Grotesk', system-ui, sans-serif;
   --radius: 0.75rem;
 }
 
@@ -40,3 +40,34 @@
     background: #D4784A;
   }
 }
+
+@keyframes gc-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes gc-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gc-grid-drift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(40px); }
+}
+
+@keyframes gc-pulse-glow {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes gc-window-blink {
+  0%, 92%, 100% { opacity: 1; }
+  94%, 98% { opacity: 0.2; }
+}
+
+.gc-float { animation: gc-float 4s ease-in-out infinite; }
+.gc-fade-up-1 { animation: gc-fade-up 0.6s ease-out 0.1s both; }
+.gc-fade-up-2 { animation: gc-fade-up 0.6s ease-out 0.25s both; }
+.gc-fade-up-3 { animation: gc-fade-up 0.6s ease-out 0.4s both; }
+.gc-fade-up-4 { animation: gc-fade-up 0.6s ease-out 0.55s both; }
