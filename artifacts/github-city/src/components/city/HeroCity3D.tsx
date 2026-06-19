@@ -3,9 +3,33 @@ import {
 } from '@react-three/fiber';
 import {
   createContext, useContext, useRef, useMemo,
-  Suspense, useState, useCallback, memo,
+  Suspense, useState, useCallback, memo, useEffect,
 } from 'react';
 import * as THREE from 'three';
+
+/* ═══════════════════════════════════════════════
+   Responsive camera — adjusts FOV for portrait vs landscape
+═══════════════════════════════════════════════ */
+function CameraAdjuster() {
+  const { camera, size } = useThree();
+  useEffect(() => {
+    const cam = camera as THREE.PerspectiveCamera;
+    const portrait = size.height > size.width;
+    const shortLandscape = !portrait && size.height < 520;
+    if (portrait) {
+      cam.fov = 62;
+      cam.position.set(11, 7.5, 11);
+    } else if (shortLandscape) {
+      cam.fov = 56;
+      cam.position.set(10.5, 7, 10.5);
+    } else {
+      cam.fov = 52;
+      cam.position.set(10, 7, 10);
+    }
+    cam.updateProjectionMatrix();
+  }, [camera, size.width, size.height]);
+  return null;
+}
 
 /* ═══════════════════════════════════════════════
    Shared transition progress  (0 = day, 1 = night)
@@ -1185,13 +1209,14 @@ export default function HeroCity3D() {
         gl={{ antialias: true, alpha: false }}
         shadows
         dpr={Math.min(window.devicePixelRatio, 2)}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', touchAction: 'none' }}
       >
         <color attach="background" args={['#C45020']} />
         <fog attach="fog" args={['#C45020', 13, 32]} />
 
         <ProgressCtx.Provider value={progressRef}>
           <Suspense fallback={null}>
+            <CameraAdjuster />
             <TransitionDriver night={night} />
             <DynamicSky />
             <DynamicLights />
@@ -1208,11 +1233,13 @@ export default function HeroCity3D() {
         </ProgressCtx.Provider>
       </Canvas>
 
-      {/* Night/Day toggle */}
+      {/* Night/Day toggle — respects safe area on notched phones */}
       <button
         onClick={toggle}
         style={{
-          position: 'absolute', bottom: '24px', right: '16px',
+          position: 'absolute',
+          bottom: 'max(20px, env(safe-area-inset-bottom, 20px))',
+          right: 'max(16px, env(safe-area-inset-right, 16px))',
           display: 'flex', alignItems: 'center', gap: '5px',
           padding: '6px 12px', borderRadius: '20px',
           border: '1px solid rgba(255,255,255,0.22)',
