@@ -5,6 +5,7 @@ import { NIGHT_PALETTE, MARS_PALETTE } from '../../utils/colors';
 interface GroundProps {
   nightMode: boolean;
   size?: number;
+  onClick?: () => void;
 }
 
 function createGroundTexture(night: boolean): THREE.CanvasTexture {
@@ -70,11 +71,11 @@ function createGroundTexture(night: boolean): THREE.CanvasTexture {
   return tex;
 }
 
-export default function Ground({ nightMode, size = 200 }: GroundProps) {
+export default function Ground({ nightMode, size = 200, onClick }: GroundProps) {
   const texture = useMemo(() => createGroundTexture(nightMode), [nightMode]);
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow onClick={onClick}>
       <planeGeometry args={[size, size, 1, 1]} />
       <meshStandardMaterial
         map={texture}
