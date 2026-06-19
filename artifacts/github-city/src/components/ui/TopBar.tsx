@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { ChevronDown, ChevronUp, Share2, Check, Trophy } from 'lucide-react';
+import { ChevronDown, ChevronUp, Share2, Check, Trophy, Home } from 'lucide-react';
 
 interface TopBarProps {
   onBuild: (username: string) => void;
@@ -10,6 +10,7 @@ interface TopBarProps {
   nightMode?: boolean;
   lastUsername?: string;
   onShowLeaderboard?: () => void;
+  onHome?: () => void;
 }
 
 function GitCityLogo({ size = 24 }: { size?: number }) {
@@ -57,7 +58,7 @@ function buildShareUrl(username: string): string {
 }
 
 export default function TopBar({
-  onBuild, loading, hasCity, username, setUsername, nightMode = false, lastUsername, onShowLeaderboard,
+  onBuild, loading, hasCity, username, setUsername, nightMode = false, lastUsername, onShowLeaderboard, onHome,
 }: TopBarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -92,6 +93,11 @@ export default function TopBar({
   if (collapsed && hasCity) {
     return (
       <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2">
+        {onHome && (
+          <button onClick={onHome} title="Back to Home" className={`flex items-center gap-1.5 ${panelBg} backdrop-blur-md px-3 py-2 rounded-full text-sm font-medium shadow-lg border text-white/70 hover:text-white transition-colors`}>
+            <Home size={14} />
+          </button>
+        )}
         <button onClick={() => setCollapsed(false)} className={`flex items-center gap-2 ${panelBg} backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg border`}>
           <GitCityLogo size={18} />
           <span className="max-w-[140px] truncate">{username}</span>
@@ -112,6 +118,12 @@ export default function TopBar({
           <GitCityLogo size={22} />
           <span className="text-white font-semibold text-sm tracking-tight" style={{ letterSpacing: '-0.01em' }}>GitHub City</span>
           <div className="ml-auto flex items-center gap-1.5">
+            {hasCity && onHome && (
+              <button onClick={onHome} title="Back to Home" className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors border bg-white/8 border-white/10 text-white/60 hover:text-white hover:border-white/25`}>
+                <Home size={13} />
+                <span>Home</span>
+              </button>
+            )}
             {onShowLeaderboard && (
               <button onClick={onShowLeaderboard} title="Top Cities" className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors border bg-white/8 border-white/10 text-white/60 hover:text-[#F0A882] hover:border-white/25`}>
                 <Trophy size={13} />
