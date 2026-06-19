@@ -8,6 +8,7 @@ import StatsOverlay from './components/ui/StatsOverlay';
 import FloatingControls from './components/ui/FloatingControls';
 import LoadingOverlay from './components/ui/LoadingOverlay';
 import Leaderboard from './components/ui/Leaderboard';
+import GitHubStats from './components/ui/GitHubStats';
 import { MARS_PALETTE, NIGHT_PALETTE } from './utils/colors';
 
 const HeroCity3D = lazy(() => import('./components/city/HeroCity3D'));
@@ -149,9 +150,7 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
         className="absolute inset-0 pointer-events-none"
         style={{
           background: [
-            /* top band behind topbar */
             'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 22%)',
-            /* center soft vignette around text */
             'radial-gradient(ellipse 65% 55% at 50% 42%, rgba(0,0,0,0.38) 0%, transparent 100%)',
           ].join(', '),
         }}
@@ -186,11 +185,19 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
           Your GitHub activity,<br />rendered as a living 3D city
         </p>
 
+        {/* GitHub repo live stats */}
+        <div
+          className="pointer-events-auto mt-5"
+          style={{ animation: 'gc-fade-up 0.6s ease-out 0.45s both' }}
+        >
+          <GitHubStats repo="yusufsafary/githubcity" />
+        </div>
+
         {/* Leaderboard CTA */}
         <button
           onClick={onShowLeaderboard}
-          className="pointer-events-auto mt-7 flex items-center gap-2 px-4 py-2 rounded-full border border-white/25 bg-black/20 text-white/85 text-sm hover:bg-black/35 hover:text-white transition-all duration-200 backdrop-blur-sm"
-          style={{ animation: 'gc-fade-up 0.6s ease-out 0.55s both' }}
+          className="pointer-events-auto mt-5 flex items-center gap-2 px-4 py-2 rounded-full border border-white/25 bg-black/20 text-white/85 text-sm hover:bg-black/35 hover:text-white transition-all duration-200 backdrop-blur-sm"
+          style={{ animation: 'gc-fade-up 0.6s ease-out 0.65s both' }}
         >
           <span className="text-base leading-none">🏆</span>
           <span className="font-medium">View Top Cities</span>
