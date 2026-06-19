@@ -572,7 +572,7 @@ export default function Building({ data, nightMode, onSelect, animProgress }: Bu
     groupRef.current.scale.x += (targetXZ - groupRef.current.scale.x) * (dt * 10);
     groupRef.current.scale.z += (targetXZ - groupRef.current.scale.z) * (dt * 10);
 
-    const targetEmit = hovered ? (nightMode ? 0.7 : 0.25) : (nightMode ? 0.32 : 0);
+    const targetEmit = hovered ? (nightMode ? 0.7 : 0.25) : (nightMode ? 0.45 : 0);
     emitRef.current.forEach(m => {
       if (m) m.emissiveIntensity += (targetEmit - m.emissiveIntensity) * (dt * 8);
     });
@@ -580,9 +580,9 @@ export default function Building({ data, nightMode, onSelect, animProgress }: Bu
 
   const matStyle = {
     map: texture,
-    color: nightMode ? new THREE.Color(data.color).multiplyScalar(0.26).getStyle() : data.color,
+    color: nightMode ? new THREE.Color(data.color).multiplyScalar(0.65).getStyle() : data.color,
     emissive: emissiveColor,
-    emissiveIntensity: nightMode ? 0.32 : 0,
+    emissiveIntensity: nightMode ? 0.45 : 0,
     roughness: nightMode ? Math.max(0.04, mp.rough - 0.06) : mp.rough,
     metalness: nightMode ? mp.metal + 0.14 : mp.metal,
   };
