@@ -25,6 +25,7 @@ export default function App() {
     cityData, loading, buildCity,
     showForks, toggleForks,
     username, setUsername, lastUsername,
+    resetCity,
   } = useGitHubCity();
 
   const [nightMode, setNightMode] = useState(false);
@@ -103,6 +104,7 @@ export default function App() {
         nightMode={nightMode}
         lastUsername={lastUsername}
         onShowLeaderboard={handleToggleLeaderboard}
+        onHome={resetCity}
       />
 
       {hasCity && cityData && (
