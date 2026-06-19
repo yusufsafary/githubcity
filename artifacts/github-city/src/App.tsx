@@ -79,6 +79,12 @@ export default function App() {
 
   return (
     <div className="w-full h-screen overflow-hidden relative" style={{ background: skyColor }}>
+      {/* ── Idle landing: fullscreen 3D hero ── */}
+      {!hasCity && loading.step === 'idle' && (
+        <LandingHero onShowLeaderboard={handleToggleLeaderboard} />
+      )}
+
+      {/* ── Active city view ── */}
       {hasCity && cityData && (
         <div className="absolute inset-0">
           <CityScene
@@ -88,10 +94,6 @@ export default function App() {
             onSelectBuilding={(b) => setSelectedBuilding(b)}
           />
         </div>
-      )}
-
-      {!hasCity && loading.step === 'idle' && (
-        <LandingHero onShowLeaderboard={handleToggleLeaderboard} />
       )}
 
       <TopBar
@@ -126,87 +128,74 @@ export default function App() {
   );
 }
 
+/* ─────────────────────────────────────────────
+   Landing hero — 3D city fills the whole screen,
+   text + branding float as an overlay
+───────────────────────────────────────────── */
 function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden">
-      <GridBackground />
+    <div className="absolute inset-0">
+      {/* Fullscreen 3D city background */}
+      <Suspense
+        fallback={
+          <div className="absolute inset-0" style={{ background: '#C45020' }} />
+        }
+      >
+        <HeroCity3D />
+      </Suspense>
 
-      <div className="relative z-10 flex flex-col items-center text-center px-8" style={{ marginTop: '-60px' }}>
-        {/* Logo + title row */}
-        <div className="gc-float gc-fade-up-1 mb-4">
-          <GitCityLogo size={72} />
+      {/* Subtle dark gradient so text is always readable */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: [
+            /* top band behind topbar */
+            'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 22%)',
+            /* center soft vignette around text */
+            'radial-gradient(ellipse 65% 55% at 50% 42%, rgba(0,0,0,0.38) 0%, transparent 100%)',
+          ].join(', '),
+        }}
+      />
+
+      {/* Text overlay — centered, below topbar */}
+      <div
+        className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+        style={{ paddingTop: '80px' }}
+      >
+        {/* Logo */}
+        <div className="gc-float gc-fade-up-1 mb-4 pointer-events-auto">
+          <GitCityLogo size={68} />
         </div>
 
-        <div className="gc-fade-up-2">
+        {/* Title */}
+        <div className="gc-fade-up-2 text-center">
           <h1
-            className="text-[2rem] font-bold text-white leading-tight"
-            style={{ letterSpacing: '-0.025em' }}
+            className="text-[2.1rem] font-bold text-white leading-tight drop-shadow-lg"
+            style={{ letterSpacing: '-0.025em', textShadow: '0 2px 16px rgba(0,0,0,0.4)' }}
           >
             GitHub City
           </h1>
-          <div className="mx-auto mt-1.5 h-[2.5px] w-10 rounded-full bg-[#4ABFB0] opacity-80" />
+          <div className="mx-auto mt-2 h-[2.5px] w-10 rounded-full bg-[#4ABFB0]" style={{ opacity: 0.9 }} />
         </div>
 
-        <p className="gc-fade-up-3 mt-3 text-white/60 text-[0.88rem] leading-relaxed font-light max-w-[220px]">
+        {/* Subtitle */}
+        <p
+          className="gc-fade-up-3 mt-3 text-white/80 text-[0.9rem] leading-relaxed font-light text-center"
+          style={{ textShadow: '0 1px 8px rgba(0,0,0,0.5)', maxWidth: '200px' }}
+        >
           Your GitHub activity,<br />rendered as a living 3D city
         </p>
 
-        {/* 3D city preview */}
-        <div className="gc-fade-up-4 mt-5 w-full flex justify-center">
-          <Suspense
-            fallback={
-              <div
-                style={{
-                  width: '296px',
-                  height: '164px',
-                  borderRadius: '18px',
-                  background: 'rgba(0,0,0,0.15)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                }}
-              />
-            }
-          >
-            <HeroCity3D />
-          </Suspense>
-        </div>
-
-        {/* CTA */}
+        {/* Leaderboard CTA */}
         <button
           onClick={onShowLeaderboard}
-          className="mt-5 flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/8 text-white/70 text-sm hover:bg-white/15 hover:text-white transition-all duration-200 backdrop-blur-sm"
-          style={{ animation: 'gc-fade-up 0.6s ease-out 0.65s both' }}
+          className="pointer-events-auto mt-7 flex items-center gap-2 px-4 py-2 rounded-full border border-white/25 bg-black/20 text-white/85 text-sm hover:bg-black/35 hover:text-white transition-all duration-200 backdrop-blur-sm"
+          style={{ animation: 'gc-fade-up 0.6s ease-out 0.55s both' }}
         >
           <span className="text-base leading-none">🏆</span>
           <span className="font-medium">View Top Cities</span>
         </button>
       </div>
-    </div>
-  );
-}
-
-function GridBackground() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <svg className="absolute inset-0 w-full h-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.8" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
-      </svg>
-      <div
-        className="absolute inset-0"
-        style={{
-          background: 'radial-gradient(ellipse 75% 75% at 50% 50%, transparent 20%, #D4784A 80%)',
-        }}
-      />
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full"
-        style={{
-          background: 'radial-gradient(ellipse, rgba(74,191,176,0.18) 0%, transparent 70%)',
-        }}
-      />
     </div>
   );
 }
