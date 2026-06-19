@@ -40,7 +40,9 @@ export default async function handler(req, res) {
   const proto = req.headers['x-forwarded-proto'] || 'https';
   const host = req.headers.host || 'githubcity.com';
   const siteUrl = `${proto}://${host}`;
-  const pageUrl = `${siteUrl}?u=${encodeURIComponent(username)}`;
+
+  // Clean path-based URL: githubcity.com/torvalds
+  const pageUrl = `${siteUrl}/${username}`;
 
   const title = esc(`${name}'s GitHub City`);
   const statsLine = `${followers.toLocaleString()} followers · ${repos} public repos`;
