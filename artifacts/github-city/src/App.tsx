@@ -8,6 +8,7 @@ import StatsOverlay from './components/ui/StatsOverlay';
 import FloatingControls from './components/ui/FloatingControls';
 import LoadingOverlay from './components/ui/LoadingOverlay';
 import Leaderboard from './components/ui/Leaderboard';
+import { AboutModal, HowToPlayModal } from './components/ui/InfoModals';
 import { MARS_PALETTE, NIGHT_PALETTE } from './utils/colors';
 
 const HeroCity3D = lazy(() => import('./components/city/HeroCity3D'));
@@ -129,6 +130,9 @@ export default function App() {
 }
 
 function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
+  const [showAbout, setShowAbout] = useState(false);
+  const [showHowTo, setShowHowTo] = useState(false);
+
   return (
     <div className="absolute inset-0">
       <Suspense fallback={<div className="absolute inset-0" style={{ background: '#C45020' }} />}>
@@ -178,7 +182,34 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
           <span className="text-base leading-none">🏆</span>
           <span className="font-medium">View Top Cities</span>
         </button>
+
+        {/* Small utility buttons */}
+        <div
+          className="pointer-events-auto flex items-center gap-2 mt-3"
+          style={{ animation: 'gc-fade-up 0.6s ease-out 0.70s both' }}
+        >
+          <button
+            onClick={() => setShowHowTo(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/55 hover:text-white/90 transition-colors"
+            style={{ background: 'rgba(0,0,0,0.18)', border: '1px solid rgba(255,255,255,0.12)' }}
+          >
+            <span className="text-[11px] leading-none">❓</span>
+            How to use
+          </button>
+          <span className="text-white/20 text-xs select-none">·</span>
+          <button
+            onClick={() => setShowAbout(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/55 hover:text-white/90 transition-colors"
+            style={{ background: 'rgba(0,0,0,0.18)', border: '1px solid rgba(255,255,255,0.12)' }}
+          >
+            <span className="text-[11px] leading-none">ℹ️</span>
+            About
+          </button>
+        </div>
       </div>
+
+      {showAbout && <AboutModal onClose={() => setShowAbout(false)} />}
+      {showHowTo && <HowToPlayModal onClose={() => setShowHowTo(false)} />}
     </div>
   );
 }
