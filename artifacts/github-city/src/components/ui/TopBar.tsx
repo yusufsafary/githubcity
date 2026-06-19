@@ -14,19 +14,40 @@ interface TopBarProps {
 
 function GitCityLogo({ size = 24 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
-      <circle cx="16" cy="16" r="16" fill="#B84C1F" />
-      <path d="M5 17 Q5.5 7 16 7 Q26.5 7 27 17Z" fill="#4ABFB0" opacity="0.22" />
-      <path d="M5 17 Q5.5 7 16 7 Q26.5 7 27 17" stroke="#4ABFB0" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      <rect x="5" y="17" width="22" height="0.8" fill="white" opacity="0.45" />
-      <rect x="8" y="13" width="3.5" height="4" fill="white" opacity="0.95" rx="0.4" />
-      <rect x="14" y="10" width="4" height="7" fill="white" opacity="0.95" rx="0.4" />
-      <rect x="20.5" y="14" width="3" height="3" fill="white" opacity="0.95" rx="0.4" />
-      <circle cx="16" cy="22" r="1.4" fill="white" opacity="0.9" />
-      <line x1="16" y1="23.4" x2="12.5" y2="26" stroke="white" strokeWidth="1.1" strokeLinecap="round" opacity="0.75" />
-      <line x1="16" y1="23.4" x2="19.5" y2="26" stroke="white" strokeWidth="1.1" strokeLinecap="round" opacity="0.75" />
-      <circle cx="12.5" cy="26.8" r="1.2" fill="white" opacity="0.85" />
-      <circle cx="19.5" cy="26.8" r="1.2" fill="white" opacity="0.85" />
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+      <circle cx="24" cy="24" r="24" fill="#A8421A" />
+      <circle cx="24" cy="24" r="24" fill="url(#tb-grad)" />
+      <ellipse cx="24" cy="16" rx="14" ry="6" fill="#4ABFB0" opacity="0.12" />
+      <rect x="6" y="35" width="36" height="1" fill="white" opacity="0.25" rx="0.5" />
+      <rect x="7" y="28" width="6" height="7" fill="white" opacity="0.75" rx="0.5" />
+      <rect x="8.5" y="29.5" width="1.8" height="1.5" fill="#4ABFB0" opacity="0.7" />
+      <rect x="14" y="22" width="7" height="13" fill="white" opacity="0.85" rx="0.5" />
+      <rect x="15.2" y="23.5" width="1.8" height="1.5" fill="#4ABFB0" opacity="0.8" />
+      <rect x="18" y="23.5" width="1.8" height="1.5" fill="#4ABFB0" opacity="0.5" />
+      <rect x="15.2" y="26.5" width="1.8" height="1.5" fill="#4ABFB0" opacity="0.55" />
+      <rect x="18" y="26.5" width="1.8" height="1.5" fill="#4ABFB0" opacity="0.8" />
+      <rect x="22" y="14" width="8" height="21" fill="white" opacity="0.97" rx="0.5" />
+      <rect x="25.5" y="10.5" width="1.5" height="3.5" fill="white" opacity="0.6" rx="0.5" />
+      <circle cx="26.25" cy="10" r="1" fill="#4ABFB0" opacity="0.9" />
+      <rect x="23.2" y="16" width="2" height="1.8" fill="#4ABFB0" opacity="0.85" />
+      <rect x="26.2" y="16" width="2" height="1.8" fill="#4ABFB0" opacity="0.5" />
+      <rect x="23.2" y="19.5" width="2" height="1.8" fill="#4ABFB0" opacity="0.65" />
+      <rect x="26.2" y="19.5" width="2" height="1.8" fill="#4ABFB0" opacity="0.9" />
+      <rect x="23.2" y="23" width="2" height="1.8" fill="#4ABFB0" opacity="0.4" />
+      <rect x="26.2" y="23" width="2" height="1.8" fill="#4ABFB0" opacity="0.7" />
+      <rect x="31" y="19" width="7" height="16" fill="white" opacity="0.85" rx="0.5" />
+      <rect x="32.2" y="20.5" width="1.8" height="1.5" fill="#4ABFB0" opacity="0.7" />
+      <rect x="35.2" y="20.5" width="1.8" height="1.5" fill="#4ABFB0" opacity="0.4" />
+      <rect x="32.2" y="23.5" width="1.8" height="1.5" fill="#4ABFB0" opacity="0.9" />
+      <rect x="35.2" y="23.5" width="1.8" height="1.5" fill="#4ABFB0" opacity="0.55" />
+      <rect x="39" y="27" width="5" height="8" fill="white" opacity="0.7" rx="0.5" />
+      <rect x="40" y="28.5" width="1.6" height="1.5" fill="#4ABFB0" opacity="0.65" />
+      <defs>
+        <radialGradient id="tb-grad" cx="50%" cy="35%" r="60%">
+          <stop offset="0%" stopColor="#C1521E" />
+          <stop offset="100%" stopColor="#8B3510" />
+        </radialGradient>
+      </defs>
     </svg>
   );
 }
@@ -89,7 +110,7 @@ export default function TopBar({
       <div className={`max-w-lg mx-auto ${panelBg} backdrop-blur-md rounded-2xl border shadow-xl p-3`}>
         <div className="flex items-center gap-2.5 mb-2">
           <GitCityLogo size={22} />
-          <span className="text-white font-bold text-sm tracking-wide">GitHub City</span>
+          <span className="text-white font-semibold text-sm tracking-tight" style={{ letterSpacing: '-0.01em' }}>GitHub City</span>
           <div className="ml-auto flex items-center gap-1.5">
             {onShowLeaderboard && (
               <button onClick={onShowLeaderboard} title="Top Cities" className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors border bg-white/8 border-white/10 text-white/60 hover:text-[#F0A882] hover:border-white/25`}>
