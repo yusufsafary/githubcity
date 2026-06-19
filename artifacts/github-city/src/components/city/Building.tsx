@@ -1,5 +1,6 @@
 import { useRef, useMemo, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import type { BuildingData } from '../../types/github';
 import { hashString, NIGHT_PALETTE, MARS_PALETTE } from '../../utils/colors';
@@ -206,6 +207,31 @@ function AcUnits({ bw, bh, bd }: { bw: number; bh: number; bd: number }) {
   );
 }
 
+/* ── Hover name tooltip ──────────────────────────────────── */
+function RepoTooltip({ h, name }: { h: number; name: string }) {
+  return (
+    <Html position={[0, h + 1.05, 0]} center distanceFactor={14} zIndexRange={[100, 0]}>
+      <div style={{
+        background: 'rgba(20,10,4,0.92)',
+        border: '1px solid rgba(74,191,176,0.5)',
+        borderRadius: 7,
+        padding: '3px 9px',
+        color: 'white',
+        fontSize: 11,
+        fontWeight: 600,
+        whiteSpace: 'nowrap',
+        pointerEvents: 'none',
+        userSelect: 'none',
+        backdropFilter: 'blur(8px)',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.45)',
+        letterSpacing: '-0.01em',
+      }}>
+        {name}
+      </div>
+    </Html>
+  );
+}
+
 /* ── Main Building component ─────────────────────────────── */
 export default function Building({ data, nightMode, onSelect, animProgress }: BuildingProps) {
   const groupRef = useRef<THREE.Group>(null);
@@ -275,6 +301,7 @@ export default function Building({ data, nightMode, onSelect, animProgress }: Bu
           )}
           <ClickIndicator yTop={h} hovered={hovered} animProgress={animProgress} nightMode={nightMode} />
         </group>
+        {hovered && <RepoTooltip h={h} name={data.repo.name} />}
       </group>
     );
   }
@@ -309,6 +336,7 @@ export default function Building({ data, nightMode, onSelect, animProgress }: Bu
           {hasWaterTower && <WaterTower ox={bw * 0.28} oy={baseH} oz={bd * 0.28} />}
           <ClickIndicator yTop={h} hovered={hovered} animProgress={animProgress} nightMode={nightMode} />
         </group>
+        {hovered && <RepoTooltip h={h} name={data.repo.name} />}
       </group>
     );
   }
@@ -347,6 +375,7 @@ export default function Building({ data, nightMode, onSelect, animProgress }: Bu
         {hasWaterTower && <WaterTower ox={bw * 0.28} oy={h * 0.62} oz={bd * 0.28} />}
         <ClickIndicator yTop={h} hovered={hovered} animProgress={animProgress} nightMode={nightMode} />
       </group>
+      {hovered && <RepoTooltip h={h} name={data.repo.name} />}
     </group>
   );
 }
