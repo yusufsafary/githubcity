@@ -57,6 +57,14 @@ export function useGitHubCity() {
     if (lastUsername) buildCity(lastUsername, val);
   }, [lastUsername, buildCity]);
 
+  const resetCity = useCallback(() => {
+    setCityData(null);
+    setLoading({ step: 'idle', message: '' });
+    setLastUsername('');
+    setUsername('');
+    window.history.pushState({}, '', '/');
+  }, []);
+
   return {
     cityData,
     loading,
@@ -66,5 +74,6 @@ export function useGitHubCity() {
     username,
     setUsername,
     lastUsername,
+    resetCity,
   };
 }
