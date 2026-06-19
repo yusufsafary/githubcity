@@ -1,49 +1,45 @@
 export const config = { runtime: 'nodejs' };
 
 function esc(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function trackVisit(username, host, token) {
+  try {
+    await fetch(`https://${host}/api/leaderboard`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'User-Agent': 'githubcity-share' },
+      body: JSON.stringify({ username })
+    });
+  } catch (_) {}
 }
 
 export default async function handler(req, res) {
   const username = (req.query.u || '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
   if (!username) return res.redirect(302, '/');
 
-  let name = username;
-  let bio = '';
-  let followers = 0;
-  let repos = 0;
+  let name = username, bio = '', followers = 0, repos = 0;
   let avatarUrl = `https://github.com/${username}.png?size=400`;
 
   try {
     const token = process.env.VITE_GITHUB_TOKEN || process.env.GITHUB_TOKEN;
     const ghRes = await fetch(`https://api.github.com/users/${username}`, {
-      headers: {
-        'User-Agent': 'githubcity-og/1.0',
-        Accept: 'application/vnd.github+json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
+      headers: { 'User-Agent': 'githubcity-og/1.0', Accept: 'application/vnd.github+json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }
     });
     if (ghRes.ok) {
-      const data = await ghRes.json();
-      name = data.name || username;
-      bio = data.bio || '';
-      followers = data.followers || 0;
-      repos = data.public_repos || 0;
-      avatarUrl = data.avatar_url ? `${data.avatar_url}&size=400` : avatarUrl;
+      const d = await ghRes.json();
+      name = d.name || username; bio = d.bio || ''; followers = d.followers || 0; repos = d.public_repos || 0;
+      avatarUrl = d.avatar_url ? `${d.avatar_url}&size=400` : avatarUrl;
     }
   } catch (_) {}
 
   const proto = req.headers['x-forwarded-proto'] || 'https';
   const host = req.headers.host || 'githubcity.com';
-  const siteUrl = `${proto}://${host}`;
 
-  // Clean path-based URL: githubcity.com/torvalds
-  const pageUrl = `${siteUrl}/${username}`;
+  // Track this visit (fire and forget)
+  trackVisit(username, host, process.env.VITE_GITHUB_TOKEN);
 
+  const pageUrl = `${proto}://${host}/${username}`;
   const title = esc(`${name}'s GitHub City`);
   const statsLine = `${followers.toLocaleString()} followers · ${repos} public repos`;
   const desc = esc(bio ? `${bio} · ${statsLine}` : statsLine);

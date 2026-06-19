@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { ChevronDown, ChevronUp, Share2, Check } from 'lucide-react';
+import { ChevronDown, ChevronUp, Share2, Check, Trophy } from 'lucide-react';
 
 interface TopBarProps {
   onBuild: (username: string) => void;
@@ -9,18 +9,12 @@ interface TopBarProps {
   setUsername: (v: string) => void;
   nightMode?: boolean;
   lastUsername?: string;
+  onShowLeaderboard?: () => void;
 }
 
 function GitCityLogo({ size = 24 }: { size?: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ flexShrink: 0 }}
-    >
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
       <circle cx="16" cy="16" r="16" fill="#B84C1F" />
       <path d="M5 17 Q5.5 7 16 7 Q26.5 7 27 17Z" fill="#4ABFB0" opacity="0.22" />
       <path d="M5 17 Q5.5 7 16 7 Q26.5 7 27 17" stroke="#4ABFB0" strokeWidth="1.6" fill="none" strokeLinecap="round" />
@@ -38,12 +32,11 @@ function GitCityLogo({ size = 24 }: { size?: number }) {
 }
 
 function buildShareUrl(username: string): string {
-  const origin = window.location.origin;
-  return `${origin}/u/${encodeURIComponent(username)}`;
+  return `${window.location.origin}/u/${encodeURIComponent(username)}`;
 }
 
 export default function TopBar({
-  onBuild, loading, hasCity, username, setUsername, nightMode = false, lastUsername,
+  onBuild, loading, hasCity, username, setUsername, nightMode = false, lastUsername, onShowLeaderboard,
 }: TopBarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -57,54 +50,33 @@ export default function TopBar({
     const shareUser = lastUsername ?? username.trim();
     if (!shareUser) return;
     const shareUrl = buildShareUrl(shareUser);
-
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: `${shareUser}'s GitHub City`,
-          text: `Check out ${shareUser}'s GitHub activity as a 3D city!`,
-          url: shareUrl,
-        });
+        await navigator.share({ title: `${shareUser}'s GitHub City`, text: `Check out ${shareUser}'s GitHub activity as a 3D city!`, url: shareUrl });
         return;
-      } catch {
-        // fall through to clipboard
-      }
+      } catch { /* fall through */ }
     }
-
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-    } catch {
+    try { await navigator.clipboard.writeText(shareUrl); }
+    catch {
       const el = document.createElement('textarea');
-      el.value = shareUrl;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
+      el.value = shareUrl; document.body.appendChild(el); el.select();
+      document.execCommand('copy'); document.body.removeChild(el);
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const panelBg = nightMode
-    ? 'bg-[#0F0315]/85 border-white/10'
-    : 'bg-[#1C0E06]/80 border-[#4ABFB0]/25';
+  const panelBg = nightMode ? 'bg-[#0F0315]/85 border-white/10' : 'bg-[#1C0E06]/80 border-[#4ABFB0]/25';
 
   if (collapsed && hasCity) {
     return (
       <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2">
-        <button
-          onClick={() => setCollapsed(false)}
-          className={`flex items-center gap-2 ${panelBg} backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg border`}
-        >
+        <button onClick={() => setCollapsed(false)} className={`flex items-center gap-2 ${panelBg} backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg border`}>
           <GitCityLogo size={18} />
           <span className="max-w-[140px] truncate">{username}</span>
           <ChevronDown size={14} className="text-[#4ABFB0]" />
         </button>
-        <button
-          onClick={handleShare}
-          title="Copy shareable link"
-          className={`flex items-center gap-1.5 ${panelBg} backdrop-blur-md px-3 py-2 rounded-full text-sm font-medium shadow-lg border transition-colors ${copied ? 'border-[#4ABFB0]/60 text-[#4ABFB0]' : 'text-white/70'}`}
-        >
+        <button onClick={handleShare} title="Copy shareable link" className={`flex items-center gap-1.5 ${panelBg} backdrop-blur-md px-3 py-2 rounded-full text-sm font-medium shadow-lg border transition-colors ${copied ? 'border-[#4ABFB0]/60 text-[#4ABFB0]' : 'text-white/70'}`}>
           {copied ? <Check size={15} className="text-[#4ABFB0]" /> : <Share2 size={15} />}
           <span className="text-xs">{copied ? 'Copied!' : 'Share'}</span>
         </button>
@@ -119,25 +91,20 @@ export default function TopBar({
           <GitCityLogo size={22} />
           <span className="text-white font-bold text-sm tracking-wide">GitHub City</span>
           <div className="ml-auto flex items-center gap-1.5">
+            {onShowLeaderboard && (
+              <button onClick={onShowLeaderboard} title="Top Cities" className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors border bg-white/8 border-white/10 text-white/60 hover:text-[#F0A882] hover:border-white/25`}>
+                <Trophy size={13} />
+                <span>Top</span>
+              </button>
+            )}
             {hasCity && (
-              <button
-                onClick={handleShare}
-                title="Copy shareable link"
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors border ${
-                  copied
-                    ? 'bg-[#4ABFB0]/20 border-[#4ABFB0]/50 text-[#4ABFB0]'
-                    : 'bg-white/8 border-white/10 text-white/60 hover:text-white/90 hover:border-white/25'
-                }`}
-              >
+              <button onClick={handleShare} title="Copy shareable link" className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors border ${copied ? 'bg-[#4ABFB0]/20 border-[#4ABFB0]/50 text-[#4ABFB0]' : 'bg-white/8 border-white/10 text-white/60 hover:text-white/90 hover:border-white/25'}`}>
                 {copied ? <Check size={13} /> : <Share2 size={13} />}
                 <span>{copied ? 'Copied!' : 'Share'}</span>
               </button>
             )}
             {hasCity && (
-              <button
-                onClick={() => setCollapsed(true)}
-                className="text-white/50 hover:text-white/80 transition-colors p-1"
-              >
+              <button onClick={() => setCollapsed(true)} className="text-white/50 hover:text-white/80 transition-colors p-1">
                 <ChevronUp size={16} />
               </button>
             )}
@@ -145,20 +112,13 @@ export default function TopBar({
         </div>
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input
-            type="text"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
+            type="text" value={username} onChange={e => setUsername(e.target.value)}
             placeholder="GitHub username…"
             className="flex-1 bg-white/10 text-white placeholder-white/35 rounded-xl px-3 py-2.5 text-sm outline-none border border-white/10 focus:border-[#4ABFB0]/60 min-h-[44px] transition-colors"
-            autoComplete="off"
-            autoCapitalize="none"
-            spellCheck={false}
+            autoComplete="off" autoCapitalize="none" spellCheck={false}
           />
-          <button
-            type="submit"
-            disabled={loading || !username.trim()}
-            className="bg-[#4ABFB0] hover:bg-[#5DD3C6] disabled:bg-white/15 disabled:text-white/35 text-black font-bold rounded-xl px-4 py-2.5 text-sm transition-colors min-h-[44px] min-w-[90px] shrink-0"
-          >
+          <button type="submit" disabled={loading || !username.trim()}
+            className="bg-[#4ABFB0] hover:bg-[#5DD3C6] disabled:bg-white/15 disabled:text-white/35 text-black font-bold rounded-xl px-4 py-2.5 text-sm transition-colors min-h-[44px] min-w-[90px] shrink-0">
             {loading ? '…' : 'Build City'}
           </button>
         </form>

@@ -7,9 +7,10 @@ import BottomSheet from './components/ui/BottomSheet';
 import StatsOverlay from './components/ui/StatsOverlay';
 import FloatingControls from './components/ui/FloatingControls';
 import LoadingOverlay from './components/ui/LoadingOverlay';
+import Leaderboard from './components/ui/Leaderboard';
 import { MARS_PALETTE, NIGHT_PALETTE } from './utils/colors';
 
-const RESERVED_PATHS = new Set(['u', 'api', 'share', '']);
+const RESERVED_PATHS = new Set(['u', 'api', 'share', 'top', '']);
 
 function usernameFromPath(): string {
   const seg = window.location.pathname.slice(1).split('/')[0];
@@ -27,34 +28,57 @@ export default function App() {
   const [nightMode, setNightMode] = useState(false);
   const [showSkyline, setShowSkyline] = useState(true);
   const [selectedBuilding, setSelectedBuilding] = useState<BuildingData | null>(null);
+  const [showLeaderboard, setShowLeaderboard] = useState(
+    window.location.pathname === '/top'
+  );
 
   const hasCity = cityData !== null && loading.step === 'done';
   const skyColor = nightMode ? NIGHT_PALETTE.skyBase : MARS_PALETTE.skyDay;
 
-  // Auto-load from path, e.g. githubcity.com/torvalds
+  // Auto-load from path e.g. githubcity.com/torvalds
   useEffect(() => {
+    if (window.location.pathname === '/top') return;
     const u = usernameFromPath();
-    if (u) {
-      setUsername(u);
-      buildCity(u);
-    }
+    if (u) { setUsername(u); buildCity(u); }
   }, []);
 
-  // Update URL to githubcity.com/<username> after city is built
+  // Update URL to /username after city is built
   useEffect(() => {
-    if (lastUsername && hasCity) {
+    if (lastUsername && hasCity && !showLeaderboard) {
       const target = `/${lastUsername}`;
       if (window.location.pathname !== target) {
         window.history.pushState({}, '', target);
       }
     }
-  }, [lastUsername, hasCity]);
+  }, [lastUsername, hasCity, showLeaderboard]);
+
+  const handleLeaderboardSelect = (u: string) => {
+    setShowLeaderboard(false);
+    setUsername(u);
+    buildCity(u);
+    window.history.pushState({}, '', `/${u}`);
+  };
+
+  const handleToggleLeaderboard = () => {
+    const next = !showLeaderboard;
+    setShowLeaderboard(next);
+    window.history.pushState({}, '', next ? '/top' : (lastUsername ? `/${lastUsername}` : '/'));
+  };
+
+  if (showLeaderboard) {
+    return (
+      <div className="w-full min-h-screen" style={{ background: skyColor }}>
+        <Leaderboard
+          nightMode={nightMode}
+          onSelect={handleLeaderboardSelect}
+          onBack={() => { setShowLeaderboard(false); window.history.pushState({}, '', lastUsername ? `/${lastUsername}` : '/'); }}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div
-      className="w-full h-screen overflow-hidden relative"
-      style={{ background: skyColor }}
-    >
+    <div className="w-full h-screen overflow-hidden relative" style={{ background: skyColor }}>
       {hasCity && cityData && (
         <div className="absolute inset-0">
           <CityScene
@@ -70,12 +94,16 @@ export default function App() {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center px-8 mt-24">
             <GitCityLogo size={72} className="mx-auto mb-5 drop-shadow-lg" />
-            <h1 className="text-3xl font-bold text-white mb-2 drop-shadow tracking-tight">
-              GitHub City
-            </h1>
+            <h1 className="text-3xl font-bold text-white mb-2 drop-shadow tracking-tight">GitHub City</h1>
             <p className="text-white/65 text-sm leading-relaxed">
               Enter a GitHub username above to generate<br />a 3D city from their public activity
             </p>
+            <button
+              onClick={handleToggleLeaderboard}
+              className="mt-5 text-[#4ABFB0] text-sm hover:text-[#5DD3C6] transition-colors underline underline-offset-2"
+            >
+              🏆 View Top Cities
+            </button>
           </div>
         </div>
       )}
@@ -88,14 +116,11 @@ export default function App() {
         setUsername={setUsername}
         nightMode={nightMode}
         lastUsername={lastUsername}
+        onShowLeaderboard={handleToggleLeaderboard}
       />
 
       {hasCity && cityData && (
-        <StatsOverlay
-          stats={cityData.stats}
-          username={lastUsername}
-          nightMode={nightMode}
-        />
+        <StatsOverlay stats={cityData.stats} username={lastUsername} nightMode={nightMode} />
       )}
 
       {hasCity && (
@@ -109,12 +134,7 @@ export default function App() {
         />
       )}
 
-      <BottomSheet
-        building={selectedBuilding}
-        onClose={() => setSelectedBuilding(null)}
-        nightMode={nightMode}
-      />
-
+      <BottomSheet building={selectedBuilding} onClose={() => setSelectedBuilding(null)} nightMode={nightMode} />
       <LoadingOverlay state={loading} nightMode={nightMode} />
     </div>
   );
@@ -122,14 +142,7 @@ export default function App() {
 
 function GitCityLogo({ size = 48, className = '' }: { size?: number; className?: string }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
       <circle cx="16" cy="16" r="16" fill="#B84C1F" />
       <path d="M5 17 Q5.5 7 16 7 Q26.5 7 27 17Z" fill="#4ABFB0" opacity="0.22" />
       <path d="M5 17 Q5.5 7 16 7 Q26.5 7 27 17" stroke="#4ABFB0" strokeWidth="1.6" fill="none" strokeLinecap="round" />
