@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm install && pnpm --filter @workspace/github-city run build",
+  "buildCommand": "pnpm --filter @workspace/github-city run build",
   "outputDirectory": "artifacts/github-city/dist/public",
   "installCommand": "pnpm install",
   "framework": null,
