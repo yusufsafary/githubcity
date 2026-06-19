@@ -719,6 +719,122 @@ function HeroTraffic() {
   );
 }
 
+/* ═══════════════════════════════════════════════
+   Mini Trees (3 types: pine, round, palm)
+═══════════════════════════════════════════════ */
+const HERO_TREE_DEFS: Array<{ x: number; z: number; s: number; t: 0|1|2 }> = [
+  { x:  2.6, z:  1.6, s: 0.38, t: 0 },
+  { x: -2.1, z:  2.1, s: 0.30, t: 1 },
+  { x:  1.6, z: -2.6, s: 0.34, t: 0 },
+  { x: -3.0, z: -1.1, s: 0.32, t: 2 },
+  { x:  0.5, z:  3.6, s: 0.27, t: 1 },
+  { x: -1.6, z: -3.2, s: 0.29, t: 0 },
+  { x:  3.6, z: -2.0, s: 0.24, t: 2 },
+  { x: -3.6, z:  2.6, s: 0.28, t: 1 },
+  { x:  4.6, z:  0.6, s: 0.21, t: 0 },
+  { x: -4.6, z: -0.6, s: 0.23, t: 1 },
+  { x:  2.1, z:  4.1, s: 0.20, t: 2 },
+  { x: -2.6, z: -4.1, s: 0.22, t: 0 },
+  { x:  5.2, z: -1.5, s: 0.18, t: 1 },
+  { x: -5.2, z:  1.5, s: 0.19, t: 2 },
+];
+
+function MiniTree({ x, z, s, t }: { x: number; z: number; s: number; t: 0|1|2 }) {
+  const trunk = '#5c3d1e';
+  const green = t === 0 ? '#2d6a4f' : t === 1 ? '#3a7a55' : '#4a8a3a';
+  return (
+    <group position={[x, 0, z]}>
+      <mesh position={[0, 0.22 * s, 0]}>
+        <cylinderGeometry args={[0.05 * s, 0.07 * s, 0.44 * s, 5]} />
+        <meshStandardMaterial color={trunk} roughness={0.92} />
+      </mesh>
+      {t === 0 && (
+        <>
+          <mesh position={[0, 0.60 * s, 0]}>
+            <coneGeometry args={[0.52 * s, 0.95 * s, 7]} />
+            <meshStandardMaterial color={green} roughness={0.82} />
+          </mesh>
+          <mesh position={[0, 1.18 * s, 0]}>
+            <coneGeometry args={[0.32 * s, 0.72 * s, 7]} />
+            <meshStandardMaterial color={green} roughness={0.82} />
+          </mesh>
+        </>
+      )}
+      {t === 1 && (
+        <mesh position={[0, 1.1 * s, 0]}>
+          <sphereGeometry args={[0.52 * s, 8, 7]} />
+          <meshStandardMaterial color={green} roughness={0.84} />
+        </mesh>
+      )}
+      {t === 2 && (
+        <mesh position={[0, 1.2 * s, 0]}>
+          <coneGeometry args={[0.68 * s, 0.45 * s, 6]} />
+          <meshStandardMaterial color={green} roughness={0.80} />
+        </mesh>
+      )}
+    </group>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   Mini Street Lamps
+═══════════════════════════════════════════════ */
+const HERO_LAMP_DEFS: Array<[number, number]> = [
+  [ 2.2,  2.2], [-2.2,  2.2], [ 2.2, -2.2], [-2.2, -2.2],
+  [ 3.8,  0.0], [-3.8,  0.0], [ 0.0,  3.8], [ 0.0, -3.8],
+  [ 5.0,  2.0], [-5.0, -2.0],
+];
+
+function MiniLamp({ x, z }: { x: number; z: number }) {
+  return (
+    <group position={[x, 0, z]}>
+      <mesh position={[0, 0.42, 0]}>
+        <cylinderGeometry args={[0.012, 0.018, 0.84, 5]} />
+        <meshStandardMaterial color="#888" metalness={0.62} roughness={0.38} />
+      </mesh>
+      <mesh position={[0.09, 0.82, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.007, 0.007, 0.18, 5]} />
+        <meshStandardMaterial color="#888" metalness={0.62} roughness={0.38} />
+      </mesh>
+      <mesh position={[0.18, 0.82, 0]}>
+        <boxGeometry args={[0.060, 0.030, 0.038]} />
+        <meshStandardMaterial color="#ffe8aa" emissive="#ffcc44" emissiveIntensity={1.6} />
+      </mesh>
+    </group>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   Mini Benches
+═══════════════════════════════════════════════ */
+const HERO_BENCH_DEFS: Array<{ x: number; z: number; r: number }> = [
+  { x:  1.4, z:  1.4, r: 0.8 },
+  { x: -1.4, z:  1.4, r: 2.4 },
+  { x:  1.4, z: -1.4, r: 4.8 },
+  { x: -1.4, z: -1.4, r: 1.2 },
+];
+
+function MiniBench({ x, z, r }: { x: number; z: number; r: number }) {
+  return (
+    <group position={[x, 0, z]} rotation={[0, r, 0]}>
+      <mesh position={[0, 0.12, 0]}>
+        <boxGeometry args={[0.28, 0.022, 0.10]} />
+        <meshStandardMaterial color="#7a5530" roughness={0.9} />
+      </mesh>
+      <mesh position={[0, 0.21, -0.04]} rotation={[0.15, 0, 0]}>
+        <boxGeometry args={[0.28, 0.064, 0.018]} />
+        <meshStandardMaterial color="#7a5530" roughness={0.9} />
+      </mesh>
+      {([-0.11, 0.11] as number[]).map((lx, i) => (
+        <mesh key={i} position={[lx, 0.06, 0]}>
+          <boxGeometry args={[0.018, 0.12, 0.015]} />
+          <meshStandardMaterial color="#555" metalness={0.4} roughness={0.6} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 function CityGroup({ night }: { night: boolean }) {
   const ref = useRef<THREE.Group>(null);
   useFrame((_, dt) => { if (ref.current) ref.current.rotation.y += dt * 0.14; });
@@ -727,6 +843,9 @@ function CityGroup({ night }: { night: boolean }) {
       <Ground night={night} />
       {BUILDINGS.map((b, i) => <Building key={i} {...b} night={night} />)}
       <HeroTraffic />
+      {HERO_TREE_DEFS.map((t, i) => <MiniTree key={`t-${i}`} {...t} />)}
+      {HERO_LAMP_DEFS.map(([x, z], i) => <MiniLamp key={`l-${i}`} x={x} z={z} />)}
+      {HERO_BENCH_DEFS.map((b, i) => <MiniBench key={`bh-${i}`} x={b.x} z={b.z} r={b.r} />)}
     </group>
   );
 }
