@@ -20,12 +20,26 @@ export const LANGUAGE_COLORS: Record<string, string> = {
   default: '#8b949e',
 };
 
+export const MARS_PALETTE = {
+  skyDay: '#D4784A',
+  skyHorizon: '#E8926A',
+  fogDay: '#C4622D',
+  groundDay: '#7A4A28',
+  groundRoad: '#A06840',
+  sandLight: '#D4A878',
+  domeGlass: '#4ABFB0',
+  domeDark: '#2CA89A',
+  buildingTint: '#B8E4E8',
+  sunGlow: '#F0A882',
+  greenPatch: '#4A8A3A',
+};
+
 export const NIGHT_PALETTE = {
-  skyBase: '#3B0855',
-  skyGradient: '#852467',
+  skyBase: '#1A0510',
+  skyGradient: '#3D1025',
   sunGlow: '#FD8083',
   neonPink: '#EE227D',
-  slateTeal: '#498099',
+  slateTeal: '#4ABFB0',
   turquoise: '#30C0B7',
 };
 

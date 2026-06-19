@@ -7,7 +7,7 @@ import Building from './Building';
 import Ground from './Ground';
 import Trees from './Trees';
 import DowntownSkyline from './DowntownSkyline';
-import { NIGHT_PALETTE } from '../../utils/colors';
+import { NIGHT_PALETTE, MARS_PALETTE } from '../../utils/colors';
 
 interface CitySceneProps {
   cityData: CityData;
@@ -19,11 +19,14 @@ interface CitySceneProps {
 function SceneLighting({ nightMode }: { nightMode: boolean }) {
   return (
     <>
-      <ambientLight intensity={nightMode ? 0.15 : 0.5} color={nightMode ? NIGHT_PALETTE.skyBase : '#fff8f0'} />
+      <ambientLight
+        intensity={nightMode ? 0.15 : 0.6}
+        color={nightMode ? NIGHT_PALETTE.skyBase : '#fff0e0'}
+      />
       <directionalLight
         position={[40, 60, 30]}
-        intensity={nightMode ? 0.3 : 1.2}
-        color={nightMode ? NIGHT_PALETTE.sunGlow : '#ffedd5'}
+        intensity={nightMode ? 0.3 : 1.4}
+        color={nightMode ? NIGHT_PALETTE.sunGlow : '#ffcf9e'}
         castShadow
         shadow-mapSize={[512, 512]}
         shadow-camera-near={1}
@@ -32,6 +35,11 @@ function SceneLighting({ nightMode }: { nightMode: boolean }) {
         shadow-camera-right={80}
         shadow-camera-top={80}
         shadow-camera-bottom={-80}
+      />
+      <directionalLight
+        position={[-20, 30, -20]}
+        intensity={nightMode ? 0 : 0.3}
+        color="#ffa060"
       />
       {nightMode && (
         <>
@@ -50,8 +58,8 @@ function SkyBackground({ nightMode }: { nightMode: boolean }) {
       scene.background = new THREE.Color(NIGHT_PALETTE.skyBase);
       scene.fog = new THREE.FogExp2(NIGHT_PALETTE.skyBase, 0.012);
     } else {
-      scene.background = new THREE.Color('#87ceeb');
-      scene.fog = new THREE.FogExp2('#c9e8f5', 0.015);
+      scene.background = new THREE.Color(MARS_PALETTE.skyDay);
+      scene.fog = new THREE.FogExp2(MARS_PALETTE.fogDay, 0.013);
     }
   }, [nightMode, scene]);
   return null;
@@ -107,7 +115,7 @@ export default function CityScene({ cityData, nightMode, showSkyline, onSelectBu
       shadows={!isMobile}
       camera={{ position: [35, 35, 35], fov: 50, near: 0.1, far: 500 }}
       gl={{ antialias: !isMobile, powerPreference: 'high-performance' }}
-      style={{ background: nightMode ? NIGHT_PALETTE.skyBase : '#87ceeb' }}
+      style={{ background: nightMode ? NIGHT_PALETTE.skyBase : MARS_PALETTE.skyDay }}
       onClick={() => onSelectBuilding(null)}
     >
       <SkyBackground nightMode={nightMode} />

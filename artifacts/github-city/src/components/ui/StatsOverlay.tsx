@@ -16,27 +16,28 @@ interface StatsOverlayProps {
 export default function StatsOverlay({ stats, username, nightMode }: StatsOverlayProps) {
   const [open, setOpen] = useState(true);
 
-  const bg = nightMode ? 'bg-[#0f0f1e]/80' : 'bg-white/80';
-  const text = nightMode ? 'text-white' : 'text-gray-900';
-  const sub = nightMode ? 'text-white/50' : 'text-gray-500';
+  const panelBg = nightMode ? 'bg-[#0F0315]/85 border-white/10' : 'bg-[#1C0E06]/80 border-[#4ABFB0]/20';
+  const text = 'text-white';
+  const sub = nightMode ? 'text-white/50' : 'text-white/55';
+  const divider = nightMode ? 'border-white/10' : 'border-white/15';
 
   return (
     <div className="fixed top-24 right-3 z-40 max-w-[200px]">
-      <div className={`${bg} backdrop-blur-md rounded-2xl border ${nightMode ? 'border-white/10' : 'border-gray-200'} shadow-lg overflow-hidden`}>
+      <div className={`${panelBg} backdrop-blur-md rounded-2xl border shadow-lg overflow-hidden`}>
         <button
           onClick={() => setOpen(v => !v)}
           className={`flex items-center gap-2 px-3 py-2.5 w-full min-h-[44px] ${text}`}
         >
-          <BarChart2 size={14} className="text-teal-400 shrink-0" />
+          <BarChart2 size={14} className="text-[#4ABFB0] shrink-0" />
           <span className="text-xs font-semibold truncate flex-1 text-left">{username}</span>
           {open ? <ChevronUp size={12} className={sub} /> : <ChevronDown size={12} className={sub} />}
         </button>
 
         {open && (
-          <div className={`px-3 pb-3 border-t ${nightMode ? 'border-white/10' : 'border-gray-100'}`}>
+          <div className={`px-3 pb-3 border-t ${divider}`}>
             <div className="space-y-2 pt-2">
               <StatRow label="Repos" value={stats.repoCount} sub={sub} text={text} />
-              <StatRow label="Commits" value={stats.totalCommits} sub={sub} text={text} note="~90 days" />
+              <StatRow label="Commits" value={stats.totalCommits} sub={sub} text={text} note="~90d" />
               <StatRow label="Stars" value={stats.totalStars} sub={sub} text={text} />
               {stats.topLanguage && (
                 <div className="flex items-center justify-between">

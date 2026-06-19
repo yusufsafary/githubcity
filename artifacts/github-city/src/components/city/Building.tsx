@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { BuildingData } from '../../types/github';
 import { hashString } from '../../utils/colors';
-import { NIGHT_PALETTE } from '../../utils/colors';
+import { NIGHT_PALETTE, MARS_PALETTE } from '../../utils/colors';
 
 interface BuildingProps {
   data: BuildingData;
@@ -26,7 +26,10 @@ function createWindowTexture(color: string, night: boolean): THREE.CanvasTexture
     for (let c = 0; c < cols; c++) {
       const lit = Math.random() > 0.35;
       if (lit) {
-        ctx.fillStyle = night ? `rgba(48,192,183,0.9)` : `rgba(255,240,180,0.85)`;
+        // Day: warm amber windows; Night: teal glow
+        ctx.fillStyle = night
+          ? `rgba(48,192,183,0.9)`
+          : `rgba(255,220,160,0.8)`;
         ctx.fillRect(c * pw + 2, r * ph + 2, pw - 4, ph - 4);
       }
     }
@@ -74,34 +77,32 @@ export default function Building({ data, nightMode, onSelect, animProgress }: Bu
         <boxGeometry args={[data.width, animHeight, data.depth]} />
         <meshStandardMaterial
           map={texture}
-          color={nightMode ? '#1a1a2e' : data.color}
+          color={nightMode ? '#1a1020' : data.color}
           emissive={emissiveColor}
           emissiveIntensity={nightMode ? 0.4 : 0}
-          roughness={0.5}
-          metalness={nightMode ? 0.6 : 0.2}
+          roughness={0.45}
+          metalness={nightMode ? 0.6 : 0.15}
         />
       </mesh>
 
-      {/* Landmark rooftop detail */}
       {data.isLandmark && animProgress > 0.8 && (
         <mesh position={[0, animHeight + 0.3, 0]} castShadow>
           <cylinderGeometry args={[0.06, 0.06, 0.8, 6]} />
           <meshStandardMaterial
-            color={nightMode ? NIGHT_PALETTE.turquoise : '#aaaaaa'}
-            emissive={nightMode ? new THREE.Color(NIGHT_PALETTE.turquoise) : new THREE.Color(0)}
-            emissiveIntensity={nightMode ? 1 : 0}
+            color={nightMode ? NIGHT_PALETTE.turquoise : MARS_PALETTE.domeGlass}
+            emissive={nightMode ? new THREE.Color(NIGHT_PALETTE.turquoise) : new THREE.Color(MARS_PALETTE.domeGlass)}
+            emissiveIntensity={nightMode ? 1 : 0.3}
             metalness={0.8}
             roughness={0.2}
           />
         </mesh>
       )}
 
-      {/* Park patch */}
       {data.hasPark && animProgress > 0.5 && (
         <mesh position={[data.width + 0.6, 0.05, 0]} receiveShadow>
           <boxGeometry args={[0.9, 0.1, 0.9]} />
           <meshStandardMaterial
-            color={nightMode ? '#1a3a2a' : '#4a7c59'}
+            color={nightMode ? '#1a3a2a' : MARS_PALETTE.greenPatch}
             roughness={0.9}
           />
         </mesh>

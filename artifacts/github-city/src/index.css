@@ -18,15 +18,15 @@
 }
 
 :root {
-  --background: 220 20% 97%;
-  --foreground: 220 15% 10%;
-  --border: 220 15% 88%;
-  --input: 220 15% 88%;
-  --ring: 174 60% 47%;
-  --primary: 174 60% 47%;
-  --primary-foreground: 0 0% 100%;
-  --muted: 220 15% 92%;
-  --muted-foreground: 220 10% 45%;
+  --background: 22 35% 96%;
+  --foreground: 22 40% 10%;
+  --border: 22 20% 82%;
+  --input: 22 20% 82%;
+  --ring: 174 55% 52%;
+  --primary: 174 55% 52%;
+  --primary-foreground: 0 0% 5%;
+  --muted: 22 20% 90%;
+  --muted-foreground: 22 15% 42%;
   --app-font-sans: 'Inter', system-ui, sans-serif;
   --radius: 0.75rem;
 }
@@ -37,6 +37,6 @@
   body {
     font-family: var(--app-font-sans);
     -webkit-font-smoothing: antialiased;
-    background: #87ceeb;
+    background: #D4784A;
   }
 }

@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { MapPin, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface TopBarProps {
   onBuild: (username: string) => void;
@@ -7,9 +7,36 @@ interface TopBarProps {
   hasCity: boolean;
   username: string;
   setUsername: (v: string) => void;
+  nightMode?: boolean;
 }
 
-export default function TopBar({ onBuild, loading, hasCity, username, setUsername }: TopBarProps) {
+function GitCityLogo({ size = 24 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ flexShrink: 0 }}
+    >
+      <circle cx="16" cy="16" r="16" fill="#B84C1F" />
+      <path d="M5 17 Q5.5 7 16 7 Q26.5 7 27 17Z" fill="#4ABFB0" opacity="0.22" />
+      <path d="M5 17 Q5.5 7 16 7 Q26.5 7 27 17" stroke="#4ABFB0" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+      <rect x="5" y="17" width="22" height="0.8" fill="white" opacity="0.45" />
+      <rect x="8" y="13" width="3.5" height="4" fill="white" opacity="0.95" rx="0.4" />
+      <rect x="14" y="10" width="4" height="7" fill="white" opacity="0.95" rx="0.4" />
+      <rect x="20.5" y="14" width="3" height="3" fill="white" opacity="0.95" rx="0.4" />
+      <circle cx="16" cy="22" r="1.4" fill="white" opacity="0.9" />
+      <line x1="16" y1="23.4" x2="12.5" y2="26" stroke="white" strokeWidth="1.1" strokeLinecap="round" opacity="0.75" />
+      <line x1="16" y1="23.4" x2="19.5" y2="26" stroke="white" strokeWidth="1.1" strokeLinecap="round" opacity="0.75" />
+      <circle cx="12.5" cy="26.8" r="1.2" fill="white" opacity="0.85" />
+      <circle cx="19.5" cy="26.8" r="1.2" fill="white" opacity="0.85" />
+    </svg>
+  );
+}
+
+export default function TopBar({ onBuild, loading, hasCity, username, setUsername, nightMode = false }: TopBarProps) {
   const [collapsed, setCollapsed] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
@@ -17,16 +44,20 @@ export default function TopBar({ onBuild, loading, hasCity, username, setUsernam
     if (!loading && username.trim()) onBuild(username.trim());
   };
 
+  const panelBg = nightMode
+    ? 'bg-[#0F0315]/85 border-white/10'
+    : 'bg-[#1C0E06]/80 border-[#4ABFB0]/25';
+
   if (collapsed && hasCity) {
     return (
       <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50">
         <button
           onClick={() => setCollapsed(false)}
-          className="flex items-center gap-2 bg-black/70 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg border border-white/10"
+          className={`flex items-center gap-2 ${panelBg} backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg border`}
         >
-          <MapPin size={14} className="text-teal-400" />
+          <GitCityLogo size={18} />
           <span className="max-w-[140px] truncate">{username}</span>
-          <ChevronDown size={14} />
+          <ChevronDown size={14} className="text-[#4ABFB0]" />
         </button>
       </div>
     );
@@ -34,12 +65,12 @@ export default function TopBar({ onBuild, loading, hasCity, username, setUsernam
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 pb-2">
-      <div className="max-w-lg mx-auto bg-black/70 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl p-3">
-        <div className="flex items-center gap-2 mb-2">
-          <MapPin size={16} className="text-teal-400 shrink-0" />
+      <div className={`max-w-lg mx-auto ${panelBg} backdrop-blur-md rounded-2xl border shadow-xl p-3`}>
+        <div className="flex items-center gap-2.5 mb-2">
+          <GitCityLogo size={22} />
           <span className="text-white font-bold text-sm tracking-wide">GitHub City</span>
           {hasCity && (
-            <button onClick={() => setCollapsed(true)} className="ml-auto text-white/50 hover:text-white/80">
+            <button onClick={() => setCollapsed(true)} className="ml-auto text-white/50 hover:text-white/80 transition-colors">
               <ChevronUp size={16} />
             </button>
           )}
@@ -50,7 +81,7 @@ export default function TopBar({ onBuild, loading, hasCity, username, setUsernam
             value={username}
             onChange={e => setUsername(e.target.value)}
             placeholder="GitHub username…"
-            className="flex-1 bg-white/10 text-white placeholder-white/40 rounded-xl px-3 py-2.5 text-sm outline-none border border-white/10 focus:border-teal-400/50 min-h-[44px]"
+            className="flex-1 bg-white/10 text-white placeholder-white/35 rounded-xl px-3 py-2.5 text-sm outline-none border border-white/10 focus:border-[#4ABFB0]/60 min-h-[44px] transition-colors"
             autoComplete="off"
             autoCapitalize="none"
             spellCheck={false}
@@ -58,7 +89,7 @@ export default function TopBar({ onBuild, loading, hasCity, username, setUsernam
           <button
             type="submit"
             disabled={loading || !username.trim()}
-            className="bg-teal-500 hover:bg-teal-400 disabled:bg-white/20 disabled:text-white/40 text-black font-bold rounded-xl px-4 py-2.5 text-sm transition-colors min-h-[44px] min-w-[90px] shrink-0"
+            className="bg-[#4ABFB0] hover:bg-[#5DD3C6] disabled:bg-white/15 disabled:text-white/35 text-black font-bold rounded-xl px-4 py-2.5 text-sm transition-colors min-h-[44px] min-w-[90px] shrink-0"
           >
             {loading ? '…' : 'Build City'}
           </button>

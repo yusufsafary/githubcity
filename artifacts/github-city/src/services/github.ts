@@ -1,6 +1,6 @@
 import type { GitHubRepo, GitHubEvent, DailyActivity, RepoActivity } from '../types/github';
 
-const CACHE_TTL = 15 * 60 * 1000; // 15 minutes
+const CACHE_TTL = 15 * 60 * 1000;
 
 interface CacheEntry<T> {
   data: T;
@@ -39,8 +39,14 @@ export function sanitizeUsername(input: string): string {
   return input.replace(/[^a-zA-Z0-9\-_]/g, '').slice(0, 39);
 }
 
+function getAuthHeaders(): Record<string, string> {
+  const token = (import.meta.env.VITE_GITHUB_TOKEN as string | undefined) ?? '';
+  if (token) return { Authorization: `Bearer ${token}` };
+  return {};
+}
+
 async function apiFetch<T>(url: string): Promise<T> {
-  const res = await fetch(url);
+  const res = await fetch(url, { headers: getAuthHeaders() });
   if (res.status === 404) throw new Error('USER_NOT_FOUND');
   if (res.status === 403 || res.status === 429) {
     const reset = res.headers.get('X-RateLimit-Reset');
