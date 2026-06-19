@@ -8,6 +8,7 @@ import Ground from './Ground';
 import Trees from './Trees';
 import DowntownSkyline from './DowntownSkyline';
 import Traffic from './Traffic';
+import CityLife from './CityLife';
 import { NIGHT_PALETTE, MARS_PALETTE } from '../../utils/colors';
 
 interface CitySceneProps {
@@ -159,6 +160,7 @@ export default function CityScene({ cityData, nightMode, showSkyline, onSelectBu
         {showSkyline && <SkylineWrapper bars={cityData.skyline} nightMode={nightMode} />}
         <Ground nightMode={nightMode} size={300} onClick={() => onSelectBuilding(null)} />
         <Traffic />
+        <CityLife nightMode={nightMode} />
       </Suspense>
 
       <OrbitControls
