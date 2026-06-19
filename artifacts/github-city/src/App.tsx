@@ -9,7 +9,7 @@ import FloatingControls from './components/ui/FloatingControls';
 import LoadingOverlay from './components/ui/LoadingOverlay';
 import Leaderboard from './components/ui/Leaderboard';
 import { AboutModal, HowToPlayModal } from './components/ui/InfoModals';
-import { MARS_PALETTE, NIGHT_PALETTE } from './utils/colors';
+import { MARS_PALETTE } from './utils/colors';
 
 const HeroCity3D = lazy(() => import('./components/city/HeroCity3D'));
 
@@ -44,7 +44,6 @@ export default function App() {
     resetCity,
   } = useGitHubCity();
 
-  const [nightMode, setNightMode] = useState(false);
   const [showSkyline, setShowSkyline] = useState(true);
   const [selectedBuilding, setSelectedBuilding] = useState<BuildingData | null>(null);
   const [showLeaderboard, setShowLeaderboard] = useState(
@@ -52,7 +51,7 @@ export default function App() {
   );
 
   const hasCity = cityData !== null && loading.step === 'done';
-  const skyColor = nightMode ? NIGHT_PALETTE.skyBase : MARS_PALETTE.skyDay;
+  const skyColor = MARS_PALETTE.skyDay;
 
   useEffect(() => {
     if (window.location.pathname === '/top') return;
@@ -86,7 +85,7 @@ export default function App() {
     return (
       <div className="w-full min-h-screen" style={{ background: skyColor }}>
         <Leaderboard
-          nightMode={nightMode}
+          nightMode={false}
           onSelect={handleLeaderboardSelect}
           onBack={() => { setShowLeaderboard(false); window.history.pushState({}, '', lastUsername ? `/${lastUsername}` : '/'); }}
         />
@@ -104,7 +103,7 @@ export default function App() {
         <div className="absolute inset-0">
           <CityScene
             cityData={cityData}
-            nightMode={nightMode}
+            nightMode={false}
             showSkyline={showSkyline}
             onSelectBuilding={(b) => setSelectedBuilding(b)}
           />
@@ -117,20 +116,18 @@ export default function App() {
         hasCity={hasCity}
         username={username}
         setUsername={setUsername}
-        nightMode={nightMode}
+        nightMode={false}
         lastUsername={lastUsername}
         onShowLeaderboard={handleToggleLeaderboard}
         onHome={resetCity}
       />
 
       {hasCity && cityData && (
-        <StatsOverlay stats={cityData.stats} username={lastUsername} nightMode={nightMode} />
+        <StatsOverlay stats={cityData.stats} username={lastUsername} nightMode={false} />
       )}
 
       {hasCity && (
         <FloatingControls
-          nightMode={nightMode}
-          onToggleNight={() => setNightMode(v => !v)}
           showForks={showForks}
           onToggleForks={toggleForks}
           showSkyline={showSkyline}
@@ -138,8 +135,8 @@ export default function App() {
         />
       )}
 
-      <BottomSheet building={selectedBuilding} onClose={() => setSelectedBuilding(null)} nightMode={nightMode} />
-      <LoadingOverlay state={loading} nightMode={nightMode} />
+      <BottomSheet building={selectedBuilding} onClose={() => setSelectedBuilding(null)} nightMode={false} />
+      <LoadingOverlay state={loading} nightMode={false} />
     </div>
   );
 }
