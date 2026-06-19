@@ -23,14 +23,14 @@ function SceneLighting({ nightMode }: { nightMode: boolean }) {
   return (
     <>
       <ambientLight
-        intensity={nightMode ? 0.12 : 0.55}
-        color={nightMode ? NIGHT_PALETTE.skyBase : '#fff0e0'}
+        intensity={nightMode ? 0.50 : 0.55}
+        color={nightMode ? '#c8d8ff' : '#fff0e0'}
       />
-      {/* Key sun */}
+      {/* Key sun / moon */}
       <directionalLight
         position={[40, 60, 30]}
-        intensity={nightMode ? 0.25 : 1.5}
-        color={nightMode ? NIGHT_PALETTE.sunGlow : '#ffcf9e'}
+        intensity={nightMode ? 1.0 : 1.5}
+        color={nightMode ? '#c8d8ff' : '#ffcf9e'}
         castShadow
         shadow-mapSize={[1024, 1024]}
         shadow-camera-near={1}
@@ -43,14 +43,14 @@ function SceneLighting({ nightMode }: { nightMode: boolean }) {
       {/* Fill — opposite side */}
       <directionalLight
         position={[-25, 20, -20]}
-        intensity={nightMode ? 0 : 0.35}
-        color="#ff9060"
+        intensity={nightMode ? 0.30 : 0.35}
+        color={nightMode ? '#7080cc' : '#ff9060'}
       />
       {/* Rim light */}
       <directionalLight
         position={[0, -8, -30]}
-        intensity={nightMode ? 0 : 0.15}
-        color="#ffe8d0"
+        intensity={nightMode ? 0.15 : 0.15}
+        color={nightMode ? '#8899dd' : '#ffe8d0'}
       />
 
       {/* Night city glow */}
