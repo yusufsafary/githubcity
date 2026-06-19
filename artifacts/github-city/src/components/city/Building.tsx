@@ -4,6 +4,65 @@ import * as THREE from 'three';
 import type { BuildingData } from '../../types/github';
 import { hashString, NIGHT_PALETTE, MARS_PALETTE } from '../../utils/colors';
 
+/* ── Click indicator ring ───────────────────────────────── */
+function ClickIndicator({ yTop, hovered, animProgress, nightMode }: {
+  yTop: number;
+  hovered: boolean;
+  animProgress: number;
+  nightMode: boolean;
+}) {
+  const ringRef = useRef<THREE.Mesh>(null);
+  const dotRef = useRef<THREE.Mesh>(null);
+
+  useFrame(() => {
+    const t = Date.now() / 1000;
+    const pulse = 1 + Math.sin(t * 2.8) * 0.18;
+    const bob = Math.sin(t * 1.6) * 0.07;
+
+    if (ringRef.current) {
+      const s = hovered ? 1.4 : pulse;
+      ringRef.current.scale.setScalar(s);
+      ringRef.current.position.y = yTop + 0.52 + bob;
+      (ringRef.current.material as THREE.MeshStandardMaterial).emissiveIntensity = hovered ? 2.2 : 1.1;
+      (ringRef.current.material as THREE.MeshStandardMaterial).opacity = hovered ? 1 : 0.82;
+    }
+    if (dotRef.current) {
+      dotRef.current.position.y = yTop + 0.52 + bob;
+      (dotRef.current.material as THREE.MeshStandardMaterial).emissiveIntensity = hovered ? 2.5 : 1.4;
+    }
+  });
+
+  if (animProgress < 0.82) return null;
+
+  const color = nightMode ? NIGHT_PALETTE.turquoise : '#4ABFB0';
+
+  return (
+    <group>
+      {/* Pulsing ring */}
+      <mesh ref={ringRef} position={[0, yTop + 0.52, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.22, 0.038, 8, 28]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={1.1}
+          transparent
+          opacity={0.82}
+          depthWrite={false}
+        />
+      </mesh>
+      {/* Centre dot */}
+      <mesh ref={dotRef} position={[0, yTop + 0.52, 0]}>
+        <sphereGeometry args={[0.055, 10, 10]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={1.4}
+        />
+      </mesh>
+    </group>
+  );
+}
+
 interface BuildingProps {
   data: BuildingData;
   nightMode: boolean;
@@ -214,6 +273,7 @@ export default function Building({ data, nightMode, onSelect, animProgress }: Bu
               <meshStandardMaterial color={nightMode ? '#1a3a2a' : MARS_PALETTE.greenPatch} roughness={0.9} />
             </mesh>
           )}
+          <ClickIndicator yTop={h} hovered={hovered} animProgress={animProgress} nightMode={nightMode} />
         </group>
       </group>
     );
@@ -247,6 +307,7 @@ export default function Building({ data, nightMode, onSelect, animProgress }: Bu
           )}
           {showAntenna && <Antenna yTop={h} nightMode={nightMode} />}
           {hasWaterTower && <WaterTower ox={bw * 0.28} oy={baseH} oz={bd * 0.28} />}
+          <ClickIndicator yTop={h} hovered={hovered} animProgress={animProgress} nightMode={nightMode} />
         </group>
       </group>
     );
@@ -284,6 +345,7 @@ export default function Building({ data, nightMode, onSelect, animProgress }: Bu
         )}
         {showAntenna && <Antenna yTop={h} nightMode={nightMode} />}
         {hasWaterTower && <WaterTower ox={bw * 0.28} oy={h * 0.62} oz={bd * 0.28} />}
+        <ClickIndicator yTop={h} hovered={hovered} animProgress={animProgress} nightMode={nightMode} />
       </group>
     </group>
   );
