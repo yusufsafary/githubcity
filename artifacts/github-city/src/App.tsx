@@ -8,7 +8,6 @@ import StatsOverlay from './components/ui/StatsOverlay';
 import FloatingControls from './components/ui/FloatingControls';
 import LoadingOverlay from './components/ui/LoadingOverlay';
 import Leaderboard from './components/ui/Leaderboard';
-import GitHubStats from './components/ui/GitHubStats';
 import { MARS_PALETTE, NIGHT_PALETTE } from './utils/colors';
 
 const HeroCity3D = lazy(() => import('./components/city/HeroCity3D'));
@@ -80,12 +79,10 @@ export default function App() {
 
   return (
     <div className="w-full h-screen overflow-hidden relative" style={{ background: skyColor }}>
-      {/* ── Idle landing: fullscreen 3D hero ── */}
       {!hasCity && loading.step === 'idle' && (
         <LandingHero onShowLeaderboard={handleToggleLeaderboard} />
       )}
 
-      {/* ── Active city view ── */}
       {hasCity && cityData && (
         <div className="absolute inset-0">
           <CityScene
@@ -129,23 +126,13 @@ export default function App() {
   );
 }
 
-/* ─────────────────────────────────────────────
-   Landing hero — 3D city fills the whole screen,
-   text + branding float as an overlay
-───────────────────────────────────────────── */
 function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
   return (
     <div className="absolute inset-0">
-      {/* Fullscreen 3D city background */}
-      <Suspense
-        fallback={
-          <div className="absolute inset-0" style={{ background: '#C45020' }} />
-        }
-      >
+      <Suspense fallback={<div className="absolute inset-0" style={{ background: '#C45020' }} />}>
         <HeroCity3D />
       </Suspense>
 
-      {/* Subtle dark gradient so text is always readable */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -156,17 +143,14 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
         }}
       />
 
-      {/* Text overlay — centered, below topbar */}
       <div
         className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
         style={{ paddingTop: '80px' }}
       >
-        {/* Logo */}
         <div className="gc-float gc-fade-up-1 mb-4 pointer-events-auto">
           <GitCityLogo size={68} />
         </div>
 
-        {/* Title */}
         <div className="gc-fade-up-2 text-center">
           <h1
             className="text-[2.1rem] font-bold text-white leading-tight drop-shadow-lg"
@@ -177,7 +161,6 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
           <div className="mx-auto mt-2 h-[2.5px] w-10 rounded-full bg-[#4ABFB0]" style={{ opacity: 0.9 }} />
         </div>
 
-        {/* Subtitle */}
         <p
           className="gc-fade-up-3 mt-3 text-white/80 text-[0.9rem] leading-relaxed font-light text-center"
           style={{ textShadow: '0 1px 8px rgba(0,0,0,0.5)', maxWidth: '200px' }}
@@ -185,19 +168,10 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
           Your GitHub activity,<br />rendered as a living 3D city
         </p>
 
-        {/* GitHub repo live stats */}
-        <div
-          className="pointer-events-auto mt-5"
-          style={{ animation: 'gc-fade-up 0.6s ease-out 0.45s both' }}
-        >
-          <GitHubStats repo="yusufsafary/githubcity" />
-        </div>
-
-        {/* Leaderboard CTA */}
         <button
           onClick={onShowLeaderboard}
-          className="pointer-events-auto mt-5 flex items-center gap-2 px-4 py-2 rounded-full border border-white/25 bg-black/20 text-white/85 text-sm hover:bg-black/35 hover:text-white transition-all duration-200 backdrop-blur-sm"
-          style={{ animation: 'gc-fade-up 0.6s ease-out 0.65s both' }}
+          className="pointer-events-auto mt-7 flex items-center gap-2 px-4 py-2 rounded-full border border-white/25 bg-black/20 text-white/85 text-sm hover:bg-black/35 hover:text-white transition-all duration-200 backdrop-blur-sm"
+          style={{ animation: 'gc-fade-up 0.6s ease-out 0.55s both' }}
         >
           <span className="text-base leading-none">🏆</span>
           <span className="font-medium">View Top Cities</span>
