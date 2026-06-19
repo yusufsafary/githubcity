@@ -216,6 +216,20 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
                 About
               </button>
             </div>
+            {/* Orynth badge */}
+            <a
+              href="https://orynth.dev/projects/github-city"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pointer-events-auto mt-1"
+              style={{ display: 'block', opacity: 0.88 }}
+            >
+              <img
+                src="https://orynth.dev/api/badge/github-city?theme=light&style=default"
+                alt="Featured on Orynth"
+                style={{ width: '156px', height: 'auto', display: 'block' }}
+              />
+            </a>
           </div>
         </div>
       ) : (
@@ -281,6 +295,21 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
               About
             </button>
           </div>
+
+          {/* Orynth badge */}
+          <a
+            href="https://orynth.dev/projects/github-city"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pointer-events-auto mt-4"
+            style={{ display: 'block', opacity: 0.88, animation: 'gc-fade-up 0.6s ease-out 0.85s both' }}
+          >
+            <img
+              src="https://orynth.dev/api/badge/github-city?theme=light&style=default"
+              alt="Featured on Orynth"
+              style={{ width: '182px', height: 'auto', display: 'block' }}
+            />
+          </a>
         </div>
       )}
 
