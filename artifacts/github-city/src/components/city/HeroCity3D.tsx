@@ -835,6 +835,69 @@ function MiniBench({ x, z, r }: { x: number; z: number; r: number }) {
   );
 }
 
+/* ═══════════════════════════════════════════════
+   Mini Traffic Lights (animated R/Y/G cycle)
+═══════════════════════════════════════════════ */
+const HERO_TL_DEFS: Array<{ x: number; z: number; offset: number }> = [
+  { x:  2.8, z: -0.5, offset: 0.0 },
+  { x: -2.8, z:  0.5, offset: 2.0 },
+  { x:  0.5, z:  2.8, offset: 1.0 },
+  { x: -0.5, z: -2.8, offset: 3.0 },
+  { x:  4.8, z:  1.5, offset: 1.5 },
+  { x: -4.8, z: -1.5, offset: 3.5 },
+];
+
+function MiniTrafficLight({ x, z, offset }: { x: number; z: number; offset: number }) {
+  const redRef = useRef<THREE.MeshStandardMaterial>(null);
+  const yelRef = useRef<THREE.MeshStandardMaterial>(null);
+  const grnRef = useRef<THREE.MeshStandardMaterial>(null);
+
+  useFrame(({ clock }) => {
+    const phase = (clock.getElapsedTime() + offset) % 6;
+    const isRed = phase < 2.5;
+    const isYel = phase >= 2.5 && phase < 3.2;
+    const isGrn = phase >= 3.2;
+    if (redRef.current) redRef.current.emissiveIntensity = isRed ? 3.5 : 0.08;
+    if (yelRef.current) yelRef.current.emissiveIntensity = isYel ? 3.5 : 0.08;
+    if (grnRef.current) grnRef.current.emissiveIntensity = isGrn ? 3.5 : 0.08;
+  });
+
+  return (
+    <group position={[x, 0, z]}>
+      {/* Pole */}
+      <mesh position={[0, 0.48, 0]}>
+        <cylinderGeometry args={[0.018, 0.024, 0.96, 5]} />
+        <meshStandardMaterial color="#555566" metalness={0.7} roughness={0.3} />
+      </mesh>
+      {/* Horizontal arm */}
+      <mesh position={[0.14, 0.94, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.012, 0.012, 0.28, 5]} />
+        <meshStandardMaterial color="#555566" metalness={0.7} roughness={0.3} />
+      </mesh>
+      {/* Housing */}
+      <mesh position={[0.28, 0.94, 0]}>
+        <boxGeometry args={[0.068, 0.185, 0.058]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.65} />
+      </mesh>
+      {/* Red */}
+      <mesh position={[0.28, 1.025, 0.033]}>
+        <sphereGeometry args={[0.020, 6, 6]} />
+        <meshStandardMaterial ref={redRef} color="#ff2222" emissive="#ff2222" emissiveIntensity={3.5} roughness={0.25} />
+      </mesh>
+      {/* Yellow */}
+      <mesh position={[0.28, 0.940, 0.033]}>
+        <sphereGeometry args={[0.020, 6, 6]} />
+        <meshStandardMaterial ref={yelRef} color="#ffcc00" emissive="#ffcc00" emissiveIntensity={0.08} roughness={0.25} />
+      </mesh>
+      {/* Green */}
+      <mesh position={[0.28, 0.855, 0.033]}>
+        <sphereGeometry args={[0.020, 6, 6]} />
+        <meshStandardMaterial ref={grnRef} color="#22dd22" emissive="#22dd22" emissiveIntensity={0.08} roughness={0.25} />
+      </mesh>
+    </group>
+  );
+}
+
 function CityGroup({ night }: { night: boolean }) {
   const ref = useRef<THREE.Group>(null);
   useFrame((_, dt) => { if (ref.current) ref.current.rotation.y += dt * 0.14; });
@@ -846,6 +909,7 @@ function CityGroup({ night }: { night: boolean }) {
       {HERO_TREE_DEFS.map((t, i) => <MiniTree key={`t-${i}`} {...t} />)}
       {HERO_LAMP_DEFS.map(([x, z], i) => <MiniLamp key={`l-${i}`} x={x} z={z} />)}
       {HERO_BENCH_DEFS.map((b, i) => <MiniBench key={`bh-${i}`} x={b.x} z={b.z} r={b.r} />)}
+      {HERO_TL_DEFS.map((tl, i) => <MiniTrafficLight key={`tl-${i}`} {...tl} />)}
     </group>
   );
 }
