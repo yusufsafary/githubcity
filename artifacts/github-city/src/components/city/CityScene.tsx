@@ -137,7 +137,6 @@ export default function CityScene({ cityData, nightMode, showSkyline, onSelectBu
       camera={{ position: [38, 32, 38], fov: 48, near: 0.1, far: 500 }}
       gl={{ antialias: !isMobile, powerPreference: 'high-performance' }}
       style={{ background: nightMode ? NIGHT_PALETTE.skyBase : MARS_PALETTE.skyDay }}
-      onClick={() => onSelectBuilding(null)}
     >
       <color attach="background" args={[nightMode ? NIGHT_PALETTE.skyBase : MARS_PALETTE.skyDay]} />
       <fog attach="fog" args={[nightMode ? NIGHT_PALETTE.skyBase : MARS_PALETTE.fogDay, 80, 220]} />
@@ -157,7 +156,7 @@ export default function CityScene({ cityData, nightMode, showSkyline, onSelectBu
         />
         <Trees buildings={cityData.buildings} nightMode={nightMode} />
         {showSkyline && <SkylineWrapper bars={cityData.skyline} nightMode={nightMode} />}
-        <Ground nightMode={nightMode} size={300} />
+        <Ground nightMode={nightMode} size={300} onClick={() => onSelectBuilding(null)} />
       </Suspense>
 
       <OrbitControls
