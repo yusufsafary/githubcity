@@ -457,6 +457,23 @@ const BUILDINGS: BldgDef[] = [
   { x: -4.0, z: 4.0,  w: 0.56, d: 0.56, h: 1.2,  type: 'classic' },
   { x: 5.5,  z: -0.5, w: 0.50, d: 0.50, h: 0.8,  type: 'concrete' },
   { x: -5.5, z: -0.8, w: 0.50, d: 0.50, h: 0.9,  type: 'warm' },
+  /* outer ring — fills the perimeter */
+  { x:  6.5, z:  2.0, w: 0.48, d: 0.48, h: 0.75, type: 'classic' },
+  { x: -6.5, z: -2.0, w: 0.48, d: 0.48, h: 0.80, type: 'warm' },
+  { x:  2.2, z:  6.5, w: 0.46, d: 0.46, h: 0.70, type: 'concrete' },
+  { x: -2.2, z: -6.5, w: 0.46, d: 0.46, h: 0.72, type: 'glass' },
+  { x:  6.2, z: -2.8, w: 0.44, d: 0.44, h: 0.65, type: 'dark' },
+  { x: -6.2, z:  2.8, w: 0.44, d: 0.44, h: 0.60, type: 'classic' },
+  { x:  3.8, z: -6.0, w: 0.44, d: 0.44, h: 0.65, type: 'warm' },
+  { x: -3.8, z:  6.0, w: 0.44, d: 0.44, h: 0.62, type: 'glass' },
+  { x:  7.2, z:  0.2, w: 0.42, d: 0.42, h: 0.55, type: 'concrete' },
+  { x: -7.2, z: -0.2, w: 0.42, d: 0.42, h: 0.58, type: 'warm' },
+  { x:  0.3, z:  7.2, w: 0.42, d: 0.42, h: 0.52, type: 'classic' },
+  { x:  0.3, z: -7.2, w: 0.40, d: 0.40, h: 0.50, type: 'dark' },
+  { x:  5.2, z:  4.8, w: 0.40, d: 0.40, h: 0.55, type: 'glass' },
+  { x: -5.2, z: -4.8, w: 0.40, d: 0.40, h: 0.52, type: 'warm' },
+  { x:  4.8, z: -5.2, w: 0.38, d: 0.38, h: 0.48, type: 'classic' },
+  { x: -4.8, z:  5.2, w: 0.38, d: 0.38, h: 0.50, type: 'concrete' },
 ];
 
 const WinFaceBase = ({ fw, fh, posZ, cols, rows, winA, winB, rotY = 0, nightMult = 1 }: {
@@ -606,12 +623,21 @@ function Ground({ night }: { night: boolean }) {
    Mini Traffic — scaled for hero city (~0.3× main)
 ═══════════════════════════════════════════════ */
 const MINI_CARS = [
-  { radius: 3.2, speed:  0.30, startAngle: 0.0,  color: '#c0392b' },
+  { radius: 3.2, speed:  0.30, startAngle: 0.00, color: '#c0392b' },
   { radius: 3.2, speed:  0.30, startAngle: 3.14, color: '#2471a3' },
   { radius: 4.5, speed: -0.22, startAngle: 1.05, color: '#d4ac0d' },
   { radius: 4.5, speed: -0.22, startAngle: 4.20, color: '#1e8449' },
   { radius: 2.2, speed:  0.38, startAngle: 2.10, color: '#8e44ad' },
   { radius: 2.2, speed:  0.38, startAngle: 5.00, color: '#17a589' },
+  /* outer ring traffic */
+  { radius: 5.8, speed:  0.18, startAngle: 0.50, color: '#e74c3c' },
+  { radius: 5.8, speed:  0.18, startAngle: 3.64, color: '#3498db' },
+  { radius: 6.5, speed: -0.14, startAngle: 1.00, color: '#f39c12' },
+  { radius: 6.5, speed: -0.14, startAngle: 4.20, color: '#27ae60' },
+  { radius: 1.5, speed:  0.55, startAngle: 1.57, color: '#e67e22' },
+  { radius: 7.2, speed:  0.10, startAngle: 2.00, color: '#9b59b6' },
+  { radius: 7.2, speed:  0.10, startAngle: 5.20, color: '#1abc9c' },
+  { radius: 3.8, speed: -0.26, startAngle: 0.80, color: '#e74c3c' },
 ];
 
 const MINI_PED_SHIRTS = ['#e05c2a','#3178c6','#4ABFB0','#e74c3c','#9b59b6','#2ecc71','#f39c12','#1abc9c'];
@@ -625,6 +651,13 @@ const MINI_PEDS = [
   { radius: 2.0, speed: -0.16, startAngle: 3.5 },
   { radius: 2.8, speed:  0.12, startAngle: 0.5 },
   { radius: 2.8, speed:  0.12, startAngle: 3.6 },
+  { radius: 1.2, speed:  0.28, startAngle: 1.2 },
+  { radius: 1.2, speed:  0.28, startAngle: 4.5 },
+  { radius: 3.4, speed: -0.10, startAngle: 0.8 },
+  { radius: 3.4, speed: -0.10, startAngle: 2.9 },
+  { radius: 3.4, speed: -0.10, startAngle: 5.1 },
+  { radius: 4.2, speed:  0.08, startAngle: 1.6 },
+  { radius: 4.2, speed:  0.08, startAngle: 4.7 },
 ];
 
 function MiniCar({ radius, speed, startAngle, color }: { radius: number; speed: number; startAngle: number; color: string }) {
@@ -737,6 +770,16 @@ const HERO_TREE_DEFS: Array<{ x: number; z: number; s: number; t: 0|1|2 }> = [
   { x: -2.6, z: -4.1, s: 0.22, t: 0 },
   { x:  5.2, z: -1.5, s: 0.18, t: 1 },
   { x: -5.2, z:  1.5, s: 0.19, t: 2 },
+  { x:  5.8, z:  3.5, s: 0.16, t: 0 },
+  { x: -5.8, z: -3.5, s: 0.17, t: 1 },
+  { x:  3.5, z:  5.8, s: 0.15, t: 2 },
+  { x: -3.5, z: -5.8, s: 0.16, t: 0 },
+  { x:  6.5, z: -1.0, s: 0.14, t: 1 },
+  { x: -6.5, z:  1.0, s: 0.15, t: 2 },
+  { x:  1.0, z: -5.8, s: 0.15, t: 0 },
+  { x: -1.0, z:  5.8, s: 0.14, t: 1 },
+  { x:  4.5, z:  5.0, s: 0.13, t: 2 },
+  { x: -4.5, z: -5.0, s: 0.13, t: 0 },
 ];
 
 function MiniTree({ x, z, s, t }: { x: number; z: number; s: number; t: 0|1|2 }) {
@@ -783,6 +826,8 @@ const HERO_LAMP_DEFS: Array<[number, number]> = [
   [ 2.2,  2.2], [-2.2,  2.2], [ 2.2, -2.2], [-2.2, -2.2],
   [ 3.8,  0.0], [-3.8,  0.0], [ 0.0,  3.8], [ 0.0, -3.8],
   [ 5.0,  2.0], [-5.0, -2.0],
+  [ 5.0, -2.0], [-5.0,  2.0], [ 2.0,  5.0], [-2.0, -5.0],
+  [ 6.8,  0.5], [-6.8, -0.5],
 ];
 
 function MiniLamp({ x, z }: { x: number; z: number }) {
@@ -798,8 +843,9 @@ function MiniLamp({ x, z }: { x: number; z: number }) {
       </mesh>
       <mesh position={[0.18, 0.82, 0]}>
         <boxGeometry args={[0.060, 0.030, 0.038]} />
-        <meshStandardMaterial color="#ffe8aa" emissive="#ffcc44" emissiveIntensity={1.6} />
+        <meshStandardMaterial color="#ffe8aa" emissive="#ffcc44" emissiveIntensity={2.2} />
       </mesh>
+      <pointLight position={[0.18, 0.85, 0]} color="#ffcc55" intensity={0.6} distance={2.8} decay={2} />
     </group>
   );
 }
@@ -898,14 +944,202 @@ function MiniTrafficLight({ x, z, offset }: { x: number; z: number; offset: numb
   );
 }
 
+/* ═══════════════════════════════════════════════
+   Helicopter — orbits high above the city
+═══════════════════════════════════════════════ */
+function RotorBlade() {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame((_, dt) => { if (ref.current) ref.current.rotation.y += dt * 14; });
+  return (
+    <mesh ref={ref} position={[0, 0.085, 0]}>
+      <boxGeometry args={[0.52, 0.007, 0.038]} />
+      <meshStandardMaterial color="#888" metalness={0.3} roughness={0.6} transparent opacity={0.75} />
+    </mesh>
+  );
+}
+
+function MiniHelicopter() {
+  const ref = useRef<THREE.Group>(null);
+  const blinkMatRef = useRef<THREE.MeshStandardMaterial>(null);
+  useFrame(({ clock }) => {
+    if (!ref.current) return;
+    const t = clock.getElapsedTime();
+    const angle = t * 0.13;
+    ref.current.position.set(
+      Math.cos(angle) * 7.8,
+      5.8 + Math.sin(t * 0.35) * 0.25,
+      Math.sin(angle) * 7.8,
+    );
+    ref.current.rotation.y = Math.PI / 2 - angle;
+    if (blinkMatRef.current) {
+      blinkMatRef.current.emissiveIntensity = Math.sin(t * 9) > 0 ? 4.0 : 0.05;
+    }
+  });
+  return (
+    <group ref={ref}>
+      {/* Body */}
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[0.26, 0.09, 0.11]} />
+        <meshStandardMaterial color="#d0d0d0" metalness={0.55} roughness={0.25} />
+      </mesh>
+      {/* Cockpit bubble */}
+      <mesh position={[0.11, 0.018, 0]}>
+        <sphereGeometry args={[0.065, 8, 8]} />
+        <meshStandardMaterial color="#aaddff" transparent opacity={0.45} metalness={0.9} roughness={0.05} />
+      </mesh>
+      {/* Tail boom */}
+      <mesh position={[-0.24, 0.018, 0]}>
+        <boxGeometry args={[0.20, 0.035, 0.035]} />
+        <meshStandardMaterial color="#bbbbbb" metalness={0.4} roughness={0.45} />
+      </mesh>
+      {/* Tail rotor */}
+      <mesh position={[-0.34, 0.020, 0.022]} rotation={[Math.PI / 2, 0, 0]}>
+        <boxGeometry args={[0.12, 0.006, 0.012]} />
+        <meshStandardMaterial color="#999" transparent opacity={0.8} />
+      </mesh>
+      {/* Main rotor */}
+      <RotorBlade />
+      {/* Red anti-collision blink */}
+      <mesh position={[0.14, 0.055, 0.06]}>
+        <sphereGeometry args={[0.013, 5, 5]} />
+        <meshStandardMaterial ref={blinkMatRef} color="#ff2222" emissive="#ff2222" emissiveIntensity={4.0} />
+      </mesh>
+      {/* White belly strobe */}
+      <mesh position={[0, -0.052, 0]}>
+        <sphereGeometry args={[0.010, 5, 5]} />
+        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1.8} />
+      </mesh>
+    </group>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   Neon Building Accents — glowing signs/panels
+═══════════════════════════════════════════════ */
+const NEON_DEFS = [
+  { x:  0.00, y: 4.62, z:  0.55, color: '#4ABFB0', w: 0.55, h: 0.11 },
+  { x:  1.90, y: 3.72, z:  0.53, color: '#ff6644', w: 0.42, h: 0.09 },
+  { x: -1.80, y: 3.06, z:  0.50, color: '#4ABFB0', w: 0.36, h: 0.08 },
+  { x:  0.60, y: 2.62, z:  0.48, color: '#ffcc00', w: 0.30, h: 0.07 },
+  { x:  3.10, y: 2.40, z:  0.44, color: '#ff4488', w: 0.28, h: 0.07 },
+  { x: -3.20, y: 2.02, z:  0.42, color: '#44aaff', w: 0.26, h: 0.06 },
+  { x:  0.00, y: 4.62, z: -0.55, color: '#ff8833', w: 0.44, h: 0.09 },
+  { x:  1.90, y: 3.72, z: -0.53, color: '#4ABFB0', w: 0.34, h: 0.07 },
+];
+
+function BuildingNeonAccents() {
+  const matRefs = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+    matRefs.current.forEach((mat, i) => {
+      if (!mat) return;
+      mat.emissiveIntensity = 1.8 + Math.sin(t * 1.1 + i * 1.1) * 0.55;
+    });
+  });
+  return (
+    <>
+      {NEON_DEFS.map((n, i) => (
+        <mesh key={i} position={[n.x, n.y, n.z]}>
+          <boxGeometry args={[n.w, n.h, 0.018]} />
+          <meshStandardMaterial
+            ref={el => { matRefs.current[i] = el; }}
+            color={n.color} emissive={n.color} emissiveIntensity={1.8} roughness={0.15}
+          />
+        </mesh>
+      ))}
+    </>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   Crosswalk & Ground Detail
+═══════════════════════════════════════════════ */
+const CROSSWALKS = [
+  { x:  1.55, z: 0.00, rot: 0 },
+  { x: -1.55, z: 0.00, rot: 0 },
+  { x:  0.00, z: 1.55, rot: Math.PI / 2 },
+  { x:  0.00, z: -1.55, rot: Math.PI / 2 },
+];
+
+function CrosswalkMarkings() {
+  return (
+    <>
+      {CROSSWALKS.map((cw, ci) => (
+        <group key={ci} position={[cw.x, 0.006, cw.z]} rotation={[0, cw.rot, 0]}>
+          {Array.from({ length: 5 }, (_, j) => (
+            <mesh key={j} position={[(j - 2) * 0.19, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+              <planeGeometry args={[0.10, 0.52]} />
+              <meshBasicMaterial color="#ffffff" opacity={0.28} transparent />
+            </mesh>
+          ))}
+        </group>
+      ))}
+      {/* Manhole covers */}
+      {[
+        [0.0, 0.8], [-0.8, 0.0], [0.8, 0.0], [0.0, -0.8],
+      ].map(([cx, cz], i) => (
+        <mesh key={`mh-${i}`} position={[cx, 0.005, cz]} rotation={[-Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.07, 10]} />
+          <meshStandardMaterial color="#444" metalness={0.7} roughness={0.5} />
+        </mesh>
+      ))}
+    </>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   Rooftop AC Units
+═══════════════════════════════════════════════ */
+const AC_UNITS = [
+  { x:  0.25, y: 5.03, z:  0.25 },
+  { x: -0.25, y: 5.03, z: -0.25 },
+  { x:  1.90, y: 4.05, z:  0.30 },
+  { x: -1.80, y: 3.45, z:  0.30 },
+];
+
+function RooftopACUnits() {
+  const fanRefs = useRef<(THREE.Mesh | null)[]>([]);
+  useFrame((_, dt) => {
+    fanRefs.current.forEach(r => { if (r) r.rotation.y += dt * 3.5; });
+  });
+  return (
+    <>
+      {AC_UNITS.map((ac, i) => (
+        <group key={i} position={[ac.x, ac.y, ac.z]}>
+          <mesh>
+            <boxGeometry args={[0.20, 0.11, 0.14]} />
+            <meshStandardMaterial color="#7a7a72" roughness={0.75} metalness={0.45} />
+          </mesh>
+          <mesh ref={el => { fanRefs.current[i] = el; }} position={[0, 0.09, 0]}>
+            <cylinderGeometry args={[0.055, 0.055, 0.035, 8]} />
+            <meshStandardMaterial color="#555" roughness={0.6} metalness={0.5} />
+          </mesh>
+          {/* Exhaust pipe */}
+          <mesh position={[0.09, 0.04, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.012, 0.012, 0.08, 6]} />
+            <meshStandardMaterial color="#888" metalness={0.6} roughness={0.4} />
+          </mesh>
+        </group>
+      ))}
+    </>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   CityGroup
+═══════════════════════════════════════════════ */
 function CityGroup({ night }: { night: boolean }) {
   const ref = useRef<THREE.Group>(null);
   useFrame((_, dt) => { if (ref.current) ref.current.rotation.y += dt * 0.14; });
   return (
     <group ref={ref}>
       <Ground night={night} />
+      <CrosswalkMarkings />
       {BUILDINGS.map((b, i) => <Building key={i} {...b} night={night} />)}
+      <BuildingNeonAccents />
+      <RooftopACUnits />
       <HeroTraffic />
+      <MiniHelicopter />
       {HERO_TREE_DEFS.map((t, i) => <MiniTree key={`t-${i}`} {...t} />)}
       {HERO_LAMP_DEFS.map(([x, z], i) => <MiniLamp key={`l-${i}`} x={x} z={z} />)}
       {HERO_BENCH_DEFS.map((b, i) => <MiniBench key={`bh-${i}`} x={b.x} z={b.z} r={b.r} />)}
