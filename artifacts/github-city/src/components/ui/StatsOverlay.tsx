@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, BarChart2 } from 'lucide-react';
+import { BarChart2, ChevronUp, ChevronDown } from 'lucide-react';
 import { getLanguageColor } from '../../utils/colors';
 
 interface StatsOverlayProps {
@@ -16,63 +16,85 @@ interface StatsOverlayProps {
 export default function StatsOverlay({ stats, username, nightMode }: StatsOverlayProps) {
   const [open, setOpen] = useState(true);
 
-  const panelBg = nightMode ? 'bg-[#0F0315]/85 border-white/10' : 'bg-[#1C0E06]/80 border-[#4ABFB0]/20';
-  const text = 'text-white';
-  const sub = nightMode ? 'text-white/50' : 'text-white/55';
-  const divider = nightMode ? 'border-white/10' : 'border-white/15';
+  const bg = nightMode ? 'rgba(15,3,21,0.88)' : 'rgba(28,14,6,0.84)';
+  const border = nightMode ? 'rgba(255,255,255,0.10)' : 'rgba(74,191,176,0.22)';
+  const sub = nightMode ? 'rgba(255,255,255,0.48)' : 'rgba(255,255,255,0.52)';
+  const divLine = nightMode ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.12)';
 
   return (
-    <div className="fixed top-24 right-3 z-40 max-w-[200px]">
-      <div className={`${panelBg} backdrop-blur-md rounded-2xl border shadow-lg overflow-hidden`}>
+    <div style={{
+      position: 'fixed', bottom: 20, left: 12, zIndex: 40,
+      minWidth: 160, maxWidth: 196,
+    }}>
+      <div style={{
+        background: bg,
+        border: `1px solid ${border}`,
+        borderRadius: 16,
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.35)',
+        overflow: 'hidden',
+      }}>
+        {/* Header */}
         <button
           onClick={() => setOpen(v => !v)}
-          className={`flex items-center gap-2 px-3 py-2.5 w-full min-h-[44px] ${text}`}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 7,
+            width: '100%', padding: '8px 10px',
+            background: 'none', border: 'none', cursor: 'pointer',
+            color: 'white', minHeight: 40,
+          }}
         >
-          <BarChart2 size={14} className="text-[#4ABFB0] shrink-0" />
-          <span className="text-xs font-semibold truncate flex-1 text-left">{username}</span>
-          {open ? <ChevronUp size={12} className={sub} /> : <ChevronDown size={12} className={sub} />}
+          <BarChart2 size={13} color="#4ABFB0" style={{ flexShrink: 0 }} />
+          <span style={{
+            flex: 1, textAlign: 'left', fontSize: 12, fontWeight: 600,
+            letterSpacing: '-0.01em', overflow: 'hidden',
+            textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+          }}>
+            {username}
+          </span>
+          {open
+            ? <ChevronDown size={11} color={sub} style={{ flexShrink: 0 }} />
+            : <ChevronUp size={11} color={sub} style={{ flexShrink: 0 }} />
+          }
         </button>
 
+        {/* Body */}
         {open && (
-          <div className={`px-3 pb-3 border-t ${divider}`}>
-            <div className="space-y-2 pt-2">
-              <StatRow label="Repos" value={stats.repoCount} sub={sub} text={text} />
-              <StatRow label="Commits" value={stats.totalCommits} sub={sub} text={text} note="~90d" />
-              <StatRow label="Stars" value={stats.totalStars} sub={sub} text={text} />
-              {stats.topLanguage && (
-                <div className="flex items-center justify-between">
-                  <span className={`text-xs ${sub}`}>Top lang</span>
-                  <div className="flex items-center gap-1.5">
-                    <div
-                      className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: getLanguageColor(stats.topLanguage) }}
-                    />
-                    <span className={`text-xs font-semibold ${text}`}>{stats.topLanguage}</span>
-                  </div>
+          <div style={{ borderTop: `1px solid ${divLine}`, padding: '8px 10px 10px' }}>
+            {[
+              { label: 'Repos',   value: stats.repoCount.toLocaleString() },
+              { label: 'Commits', value: stats.totalCommits.toLocaleString(), note: '~90d' },
+              { label: 'Stars',   value: stats.totalStars.toLocaleString() },
+            ].map(({ label, value, note }) => (
+              <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                <span style={{ fontSize: 11, color: sub }}>{label}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: 'white' }}>{value}</span>
+                  {note && <span style={{ fontSize: 10, color: sub }}>{note}</span>}
                 </div>
-              )}
-            </div>
-            <p className={`text-[10px] ${sub} mt-2 leading-tight`}>
-              * Commit data covers ~90 days only
+              </div>
+            ))}
+
+            {stats.topLanguage && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                <span style={{ fontSize: 11, color: sub }}>Top lang</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <div style={{
+                    width: 7, height: 7, borderRadius: '50%',
+                    background: getLanguageColor(stats.topLanguage),
+                    flexShrink: 0,
+                  }} />
+                  <span style={{ fontSize: 11, fontWeight: 700, color: 'white' }}>{stats.topLanguage}</span>
+                </div>
+              </div>
+            )}
+
+            <p style={{ fontSize: 9.5, color: sub, marginTop: 6, lineHeight: 1.4 }}>
+              * Commit data ~90 days
             </p>
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-function StatRow({
-  label, value, sub, text, note,
-}: {
-  label: string; value: number; sub: string; text: string; note?: string;
-}) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className={`text-xs ${sub}`}>{label}</span>
-      <div className="flex items-center gap-1">
-        <span className={`text-xs font-bold ${text}`}>{value.toLocaleString()}</span>
-        {note && <span className={`text-[10px] ${sub}`}>{note}</span>}
       </div>
     </div>
   );
