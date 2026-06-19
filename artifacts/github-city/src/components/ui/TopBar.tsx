@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Share2, Check } from 'lucide-react';
 
 interface TopBarProps {
   onBuild: (username: string) => void;
@@ -8,6 +8,7 @@ interface TopBarProps {
   username: string;
   setUsername: (v: string) => void;
   nightMode?: boolean;
+  lastUsername?: string;
 }
 
 function GitCityLogo({ size = 24 }: { size?: number }) {
@@ -36,12 +37,52 @@ function GitCityLogo({ size = 24 }: { size?: number }) {
   );
 }
 
-export default function TopBar({ onBuild, loading, hasCity, username, setUsername, nightMode = false }: TopBarProps) {
+function buildShareUrl(username: string): string {
+  const origin = window.location.origin;
+  return `${origin}/u/${encodeURIComponent(username)}`;
+}
+
+export default function TopBar({
+  onBuild, loading, hasCity, username, setUsername, nightMode = false, lastUsername,
+}: TopBarProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!loading && username.trim()) onBuild(username.trim());
+  };
+
+  const handleShare = async () => {
+    const shareUser = lastUsername ?? username.trim();
+    if (!shareUser) return;
+    const shareUrl = buildShareUrl(shareUser);
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${shareUser}'s GitHub City`,
+          text: `Check out ${shareUser}'s GitHub activity as a 3D city!`,
+          url: shareUrl,
+        });
+        return;
+      } catch {
+        // fall through to clipboard
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+    } catch {
+      const el = document.createElement('textarea');
+      el.value = shareUrl;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const panelBg = nightMode
@@ -50,7 +91,7 @@ export default function TopBar({ onBuild, loading, hasCity, username, setUsernam
 
   if (collapsed && hasCity) {
     return (
-      <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50">
+      <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2">
         <button
           onClick={() => setCollapsed(false)}
           className={`flex items-center gap-2 ${panelBg} backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg border`}
@@ -58,6 +99,14 @@ export default function TopBar({ onBuild, loading, hasCity, username, setUsernam
           <GitCityLogo size={18} />
           <span className="max-w-[140px] truncate">{username}</span>
           <ChevronDown size={14} className="text-[#4ABFB0]" />
+        </button>
+        <button
+          onClick={handleShare}
+          title="Copy shareable link"
+          className={`flex items-center gap-1.5 ${panelBg} backdrop-blur-md px-3 py-2 rounded-full text-sm font-medium shadow-lg border transition-colors ${copied ? 'border-[#4ABFB0]/60 text-[#4ABFB0]' : 'text-white/70'}`}
+        >
+          {copied ? <Check size={15} className="text-[#4ABFB0]" /> : <Share2 size={15} />}
+          <span className="text-xs">{copied ? 'Copied!' : 'Share'}</span>
         </button>
       </div>
     );
@@ -69,11 +118,30 @@ export default function TopBar({ onBuild, loading, hasCity, username, setUsernam
         <div className="flex items-center gap-2.5 mb-2">
           <GitCityLogo size={22} />
           <span className="text-white font-bold text-sm tracking-wide">GitHub City</span>
-          {hasCity && (
-            <button onClick={() => setCollapsed(true)} className="ml-auto text-white/50 hover:text-white/80 transition-colors">
-              <ChevronUp size={16} />
-            </button>
-          )}
+          <div className="ml-auto flex items-center gap-1.5">
+            {hasCity && (
+              <button
+                onClick={handleShare}
+                title="Copy shareable link"
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors border ${
+                  copied
+                    ? 'bg-[#4ABFB0]/20 border-[#4ABFB0]/50 text-[#4ABFB0]'
+                    : 'bg-white/8 border-white/10 text-white/60 hover:text-white/90 hover:border-white/25'
+                }`}
+              >
+                {copied ? <Check size={13} /> : <Share2 size={13} />}
+                <span>{copied ? 'Copied!' : 'Share'}</span>
+              </button>
+            )}
+            {hasCity && (
+              <button
+                onClick={() => setCollapsed(true)}
+                className="text-white/50 hover:text-white/80 transition-colors p-1"
+              >
+                <ChevronUp size={16} />
+              </button>
+            )}
+          </div>
         </div>
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input

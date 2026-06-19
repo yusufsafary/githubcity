@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGitHubCity } from './hooks/useGitHubCity';
 import type { BuildingData } from './types/github';
 import CityScene from './components/city/CityScene';
@@ -8,6 +8,14 @@ import StatsOverlay from './components/ui/StatsOverlay';
 import FloatingControls from './components/ui/FloatingControls';
 import LoadingOverlay from './components/ui/LoadingOverlay';
 import { MARS_PALETTE, NIGHT_PALETTE } from './utils/colors';
+
+const RESERVED_PATHS = new Set(['u', 'api', 'share', '']);
+
+function usernameFromPath(): string {
+  const seg = window.location.pathname.slice(1).split('/')[0];
+  if (!seg || RESERVED_PATHS.has(seg)) return '';
+  return seg;
+}
 
 export default function App() {
   const {
@@ -22,6 +30,25 @@ export default function App() {
 
   const hasCity = cityData !== null && loading.step === 'done';
   const skyColor = nightMode ? NIGHT_PALETTE.skyBase : MARS_PALETTE.skyDay;
+
+  // Auto-load from path, e.g. githubcity.com/torvalds
+  useEffect(() => {
+    const u = usernameFromPath();
+    if (u) {
+      setUsername(u);
+      buildCity(u);
+    }
+  }, []);
+
+  // Update URL to githubcity.com/<username> after city is built
+  useEffect(() => {
+    if (lastUsername && hasCity) {
+      const target = `/${lastUsername}`;
+      if (window.location.pathname !== target) {
+        window.history.pushState({}, '', target);
+      }
+    }
+  }, [lastUsername, hasCity]);
 
   return (
     <div
@@ -60,6 +87,7 @@ export default function App() {
         username={username}
         setUsername={setUsername}
         nightMode={nightMode}
+        lastUsername={lastUsername}
       />
 
       {hasCity && cityData && (
