@@ -9,64 +9,87 @@ interface FloatingControlsProps {
   onToggleSkyline: () => void;
 }
 
+interface IconBtnProps {
+  onClick: () => void;
+  active: boolean;
+  icon: React.ReactNode;
+  label: string;
+  activeColor: string;
+  night: boolean;
+}
+
+function IconBtn({ onClick, active, icon, label, activeColor, night }: IconBtnProps) {
+  return (
+    <button
+      onClick={onClick}
+      title={label}
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        width: 36, height: 36, borderRadius: 12,
+        background: active ? activeColor : 'transparent',
+        border: 'none', cursor: 'pointer', transition: 'all 0.18s ease',
+        color: active ? '#ffffff' : (night ? 'rgba(255,255,255,0.50)' : 'rgba(255,255,255,0.55)'),
+        flexShrink: 0,
+      }}
+      aria-label={label}
+    >
+      {icon}
+    </button>
+  );
+}
+
+function Divider({ night }: { night: boolean }) {
+  return (
+    <div style={{
+      width: 1, height: 20, flexShrink: 0,
+      background: night ? 'rgba(255,255,255,0.10)' : 'rgba(74,191,176,0.20)',
+    }} />
+  );
+}
+
 export default function FloatingControls({
   nightMode, onToggleNight,
   showForks, onToggleForks,
   showSkyline, onToggleSkyline,
 }: FloatingControlsProps) {
-  const panelBg = nightMode ? 'bg-[#0F0315]/85 border-white/10' : 'bg-[#1C0E06]/80 border-[#4ABFB0]/20';
-
   return (
-    <div className="fixed bottom-6 right-3 z-40 flex flex-col gap-2">
-      <ToggleBtn
+    <div style={{
+      position: 'fixed', bottom: 20, right: 12, zIndex: 40,
+      display: 'flex', alignItems: 'center', gap: 2,
+      background: nightMode ? 'rgba(15,3,21,0.88)' : 'rgba(28,14,6,0.84)',
+      border: `1px solid ${nightMode ? 'rgba(255,255,255,0.10)' : 'rgba(74,191,176,0.22)'}`,
+      borderRadius: 16,
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
+      padding: '4px 6px',
+      boxShadow: '0 4px 24px rgba(0,0,0,0.35)',
+    }}>
+      <IconBtn
         active={nightMode}
         onClick={onToggleNight}
-        panelBg={panelBg}
-        icon={nightMode
-          ? <Moon size={18} className="text-purple-400" />
-          : <Sun size={18} className="text-[#F0A882]" />
-        }
-        label={nightMode ? 'Day' : 'Night'}
-        activeColor="bg-purple-700"
+        night={nightMode}
+        icon={nightMode ? <Moon size={16} /> : <Sun size={16} />}
+        label={nightMode ? 'Switch to Day' : 'Switch to Night'}
+        activeColor="#6d28d9"
       />
-      <ToggleBtn
+      <Divider night={nightMode} />
+      <IconBtn
         active={showForks}
         onClick={() => onToggleForks(!showForks)}
-        panelBg={panelBg}
-        icon={<GitFork size={16} className={showForks ? 'text-[#4ABFB0]' : 'text-white/40'} />}
-        label="Forks"
-        activeColor="bg-[#2CA89A]"
+        night={nightMode}
+        icon={<GitFork size={15} />}
+        label={showForks ? 'Hide Forks' : 'Show Forks'}
+        activeColor="#2CA89A"
       />
-      <ToggleBtn
+      <Divider night={nightMode} />
+      <IconBtn
         active={showSkyline}
         onClick={onToggleSkyline}
-        panelBg={panelBg}
-        icon={<Building2 size={16} className={showSkyline ? 'text-[#F0A882]' : 'text-white/40'} />}
-        label="Skyline"
-        activeColor="bg-[#B84C1F]"
+        night={nightMode}
+        icon={<Building2 size={15} />}
+        label={showSkyline ? 'Hide Skyline' : 'Show Skyline'}
+        activeColor="#B84C1F"
       />
     </div>
-  );
-}
-
-function ToggleBtn({
-  active, onClick, panelBg, icon, label, activeColor,
-}: {
-  active: boolean; onClick: () => void;
-  panelBg: string; icon: React.ReactNode;
-  label: string; activeColor: string;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-2 px-3 py-2.5 rounded-2xl border min-h-[44px] text-xs font-medium transition-colors backdrop-blur-md shadow-lg ${
-        active
-          ? `${activeColor} text-white border-transparent`
-          : `${panelBg} text-white/60`
-      }`}
-    >
-      {icon}
-      <span>{label}</span>
-    </button>
   );
 }
