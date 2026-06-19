@@ -23,14 +23,14 @@ function SceneLighting({ nightMode }: { nightMode: boolean }) {
   return (
     <>
       <ambientLight
-        intensity={nightMode ? 0.50 : 0.55}
-        color={nightMode ? '#c8d8ff' : '#fff0e0'}
+        intensity={nightMode ? 0.35 : 0.55}
+        color={nightMode ? '#b0c8e8' : '#fff0e0'}
       />
       {/* Key sun / moon */}
       <directionalLight
         position={[40, 60, 30]}
-        intensity={nightMode ? 1.0 : 1.5}
-        color={nightMode ? '#c8d8ff' : '#ffcf9e'}
+        intensity={nightMode ? 0.80 : 1.5}
+        color={nightMode ? '#c8e0ff' : '#ffcf9e'}
         castShadow
         shadow-mapSize={[1024, 1024]}
         shadow-camera-near={1}
