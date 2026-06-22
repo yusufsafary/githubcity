@@ -233,32 +233,37 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
                 About
               </button>
             </div>
-            <div className="flex items-center gap-2 mt-1">
-              <a
-                href="https://x.com/i/connect_people"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-white/10 transition-colors"
-                style={{ background: 'rgba(0,0,0,0.20)', border: '1px solid rgba(255,255,255,0.14)' }}
-                title="Follow on X"
-              >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" className="text-white/55">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </a>
-              <a
-                href="https://kickstart.easya.io/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pointer-events-auto"
-                title="EasyA Kickstart"
-              >
-                <img
-                  src="/easya-kickstart.png"
-                  alt="EasyA Kickstart"
-                  style={{ height: '22px', width: 'auto', display: 'block', opacity: 0.85 }}
-                />
-              </a>
+            <div className="flex flex-col gap-1.5 mt-2">
+              <div className="flex items-center gap-2">
+                <a
+                  href="https://x.com/i/connect_people"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-9 h-9 rounded-full hover:bg-white/10 transition-colors"
+                  style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.18)' }}
+                  title="Follow on X"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-white/75">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                </a>
+                <a
+                  href="https://kickstart.easya.io/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pointer-events-auto"
+                  title="EasyA Kickstart"
+                >
+                  <img
+                    src="/easya-kickstart.png"
+                    alt="EasyA Kickstart"
+                    style={{ height: '34px', width: 'auto', display: 'block', opacity: 0.9 }}
+                  />
+                </a>
+              </div>
+              <p className="text-[10px] font-semibold tracking-widest uppercase text-white/50" style={{ letterSpacing: '0.12em' }}>
+                City soon on EasyA Kickstart
+              </p>
             </div>
           </div>
         </div>
@@ -326,33 +331,38 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
           </div>
 
           <div
-            className="pointer-events-auto flex items-center gap-3 mt-3"
+            className="pointer-events-auto flex flex-col items-center gap-2 mt-3"
             style={{ animation: 'gc-fade-up 0.6s ease-out 0.85s both' }}
           >
-            <a
-              href="https://x.com/i/connect_people"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-white/10 transition-colors"
-              style={{ background: 'rgba(0,0,0,0.20)', border: '1px solid rgba(255,255,255,0.14)' }}
-              title="Follow on X"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-white/60">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-              </svg>
-            </a>
-            <a
-              href="https://kickstart.easya.io/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="EasyA Kickstart"
-            >
-              <img
-                src="/easya-kickstart.png"
-                alt="EasyA Kickstart"
-                style={{ height: '24px', width: 'auto', display: 'block', opacity: 0.85 }}
-              />
-            </a>
+            <div className="flex items-center gap-3">
+              <a
+                href="https://x.com/i/connect_people"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition-colors"
+                style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.18)' }}
+                title="Follow on X"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-white/75">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              <a
+                href="https://kickstart.easya.io/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="EasyA Kickstart"
+              >
+                <img
+                  src="/easya-kickstart.png"
+                  alt="EasyA Kickstart"
+                  style={{ height: '40px', width: 'auto', display: 'block', opacity: 0.9 }}
+                />
+              </a>
+            </div>
+            <p className="text-[11px] font-semibold uppercase text-white/50" style={{ letterSpacing: '0.14em' }}>
+              City soon on EasyA Kickstart
+            </p>
           </div>
 
         </div>
