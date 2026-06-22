@@ -257,7 +257,7 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
                   <img
                     src="/easya-kickstart.png"
                     alt="EasyA Kickstart"
-                    style={{ height: '34px', width: 'auto', display: 'block', opacity: 0.9 }}
+                    style={{ height: '44px', width: 'auto', display: 'block', opacity: 0.9 }}
                   />
                 </a>
               </div>
@@ -356,7 +356,7 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
                 <img
                   src="/easya-kickstart.png"
                   alt="EasyA Kickstart"
-                  style={{ height: '40px', width: 'auto', display: 'block', opacity: 0.9 }}
+                  style={{ height: '48px', width: 'auto', display: 'block', opacity: 0.9 }}
                 />
               </a>
             </div>
