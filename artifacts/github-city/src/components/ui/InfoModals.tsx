@@ -126,17 +126,6 @@ export function AboutModal({ onClose }: { onClose: () => void }) {
             @Kevindicks_
           </a>
         </div>
-        <a
-          href="https://x.com/Kevindicks_"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="ml-auto shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/12 text-white/50 hover:text-white hover:border-white/25 transition-colors text-xs"
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.732-8.857L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-          </svg>
-          Follow
-        </a>
       </div>
 
       {/* bottom padding for scroll breathing room */}
