@@ -113,17 +113,17 @@ export function AboutModal({ onClose }: { onClose: () => void }) {
           className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white font-bold text-sm"
           style={{ background: 'linear-gradient(135deg, #4ABFB0, #2CA89A)' }}
         >
-          K
+          J
         </div>
         <div className="min-w-0">
           <p className="text-white/40 text-xs">Built by</p>
           <a
-            href="https://x.com/Kevindicks_"
+            href="https://x.com/jamesblock_"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#4ABFB0] font-semibold text-sm hover:text-[#6DD4C8] transition-colors"
           >
-            @Kevindicks_
+            @jamesblock_
           </a>
         </div>
       </div>
