@@ -236,7 +236,7 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
             <div className="flex flex-col gap-1.5 mt-2">
               <div className="flex items-center gap-2">
                 <a
-                  href="https://x.com/i/connect_people"
+                  href="https://x.com/jamesblock_"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-9 h-9 rounded-full hover:bg-white/10 transition-colors"
@@ -336,7 +336,7 @@ function LandingHero({ onShowLeaderboard }: { onShowLeaderboard: () => void }) {
           >
             <div className="flex items-center gap-3">
               <a
-                href="https://x.com/i/connect_people"
+                href="https://x.com/jamesblock_"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition-colors"
